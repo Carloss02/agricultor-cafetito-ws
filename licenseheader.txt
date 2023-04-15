@@ -1,0 +1,8 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Equipo de desarrollo de Ingenieria de Software
+${licensePrefix}UMG 2023
+<#if licenseLast??>
+${licenseLast}
+</#if>
