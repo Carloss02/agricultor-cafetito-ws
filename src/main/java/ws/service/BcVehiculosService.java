@@ -23,9 +23,9 @@ public class BcVehiculosService {
     
     public List<VehiculosAutorizadosDto> getVehiculosAutorizados(){
         
-        BcEstados autorizado = berRepository.findByIdEstado(16);
+        //BcEstados autorizado = berRepository.findByIdEstado(16);
         
-        List<BcVehiculos> vehiculos = bvRepository.findByBcEstados(autorizado);
+        List<BcVehiculos> vehiculos = bvRepository.findByEstadoVehiculo(16);
         List<VehiculosAutorizadosDto> mensajesDto = new ArrayList<>();
         vehiculos.forEach((vehiculo) -> {
             mensajesDto.add(vehiculo.tovehiculosAutorizadosDto());

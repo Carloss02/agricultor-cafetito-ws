@@ -20,7 +20,6 @@ public class MensajeDto {
     private int idParcialidad;
     private int parcialidades;
     private BigDecimal totalPesaje;
-    private String estadoMensaje;
     private int codigoEstado;
     private String mensaje;
     private int aprobado;
@@ -32,14 +31,13 @@ public class MensajeDto {
     public MensajeDto() {
     }
 
-    public MensajeDto(int idMensaje, String numeroCuenta, String placaVehiculo, int idParcialidad, int parcialidades, BigDecimal totalPesaje, String estadoMensaje, int codigoEstado, String mensaje, int aprobado, int correccion, String usuarioCreacion, Date fechaCreacion) {
+    public MensajeDto(int idMensaje, String numeroCuenta, String placaVehiculo, int idParcialidad, int parcialidades, BigDecimal totalPesaje, int codigoEstado, String mensaje, int aprobado, int correccion, String usuarioCreacion, Date fechaCreacion) {
         this.idMensaje = idMensaje;
         this.numeroCuenta = numeroCuenta;
         this.placaVehiculo = placaVehiculo;
         this.idParcialidad = idParcialidad;
         this.parcialidades = parcialidades;
         this.totalPesaje = totalPesaje;
-        this.estadoMensaje = estadoMensaje;
         this.codigoEstado = codigoEstado;
         this.mensaje = mensaje;
         this.aprobado = aprobado;
@@ -94,14 +92,6 @@ public class MensajeDto {
 
     public void setTotalPesaje(BigDecimal totalPesaje) {
         this.totalPesaje = totalPesaje;
-    }
-
-    public String getEstadoMensaje() {
-        return estadoMensaje;
-    }
-
-    public void setEstadoMensaje(String estadoMensaje) {
-        this.estadoMensaje = estadoMensaje;
     }
 
     public String getMensaje() {

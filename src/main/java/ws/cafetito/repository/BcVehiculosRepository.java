@@ -17,5 +17,5 @@ import ws.cafetito.model.BcVehiculos;
 public interface BcVehiculosRepository extends JpaRepository<BcVehiculos, String>{
     BcVehiculos findByPlacaVehiculo(String placaVehiculo);
     
-    List<BcVehiculos> findByBcEstados(BcEstados estado);
+    List<BcVehiculos> findByEstadoVehiculo(Integer estadoVehiculo);
 }

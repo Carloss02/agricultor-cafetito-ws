@@ -26,11 +26,11 @@ public class BcTransportistasService {
     
     public List<TransportistasAutorizadosDto> getTransporitistasAutorizados(){
         //obtiene un objeto estado, es decir el estado con condigo 22. 
-        BcEstados autorizado = beRepository.findByIdEstado(22);
+        //BcEstados autorizado = beRepository.findByIdEstado(22);
         
         //busca todos los transportistas con estado Transportista Autorizado
         // y lo asigna a la variable transportistas. 
-        List<BcTransportistas> transportistas = btRepository.findByBcEstados(autorizado);
+        List<BcTransportistas> transportistas = btRepository.findByEstadoTransportista(22);
         
         //Creamos una un objeto DTO de tipo lista. 
         List<TransportistasAutorizadosDto> transportistasDto = new ArrayList<>();

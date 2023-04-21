@@ -6,7 +6,6 @@
 package ws.agricultor.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ws.agricultor.model.AgrEstados;
 import ws.agricultor.model.AgrParcialidades;
 
 /**
@@ -15,5 +14,5 @@ import ws.agricultor.model.AgrParcialidades;
  */
 public interface AgrParcialidadesRepository extends JpaRepository<AgrParcialidades, Integer>{
     AgrParcialidades findByIdParcialidad(Integer idParcialidad);
-    AgrParcialidades findByPlacaVehiculoAndAgrEstados(String placa, AgrEstados estado);
+    AgrParcialidades findByPlacaVehiculoAndEstadoParcialidad(String placa, Integer estado);
 }

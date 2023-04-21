@@ -10,12 +10,12 @@ public class ValidarTransportistaDto {
     private String nombre;
     private String telefono; 
     private String email;
-    private String estado; 
+    private int estado; 
 
     public ValidarTransportistaDto() {
     }
     
-    public ValidarTransportistaDto(String numeroLicencia, String tipoLicencia, String nombre, String telefono, String email, String estado) {
+    public ValidarTransportistaDto(String numeroLicencia, String tipoLicencia, String nombre, String telefono, String email, int estado) {
         this.numeroLicencia = numeroLicencia;
         this.tipoLicencia = tipoLicencia;
         this.nombre = nombre;
@@ -64,11 +64,11 @@ public class ValidarTransportistaDto {
         this.email = email;
     }
 
-    public String getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
     

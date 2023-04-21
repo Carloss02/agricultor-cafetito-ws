@@ -13,14 +13,14 @@ public class ValidarVehiculoDto {
     private String colorVehiculo; 
     private String tipovehiculo; 
     private BigDecimal pesoVehiculo; 
-    private String estadoVehiculo;
+    private int estadoVehiculo;
     private String numeroCuenta; 
     private int idParcialidad; 
 
     public ValidarVehiculoDto() {
     }
 
-    public ValidarVehiculoDto(String placaVehiculo, String marcaVehiculo, int modeloVehiculo, String colorVehiculo, String tipovehiculo, BigDecimal pesoVehiculo, String estadoVehiculo, String numeroCuenta, int idParcialidad) {
+    public ValidarVehiculoDto(String placaVehiculo, String marcaVehiculo, int modeloVehiculo, String colorVehiculo, String tipovehiculo, BigDecimal pesoVehiculo, int estadoVehiculo, String numeroCuenta, int idParcialidad) {
         this.placaVehiculo = placaVehiculo;
         this.marcaVehiculo = marcaVehiculo;
         this.modeloVehiculo = modeloVehiculo;
@@ -80,11 +80,11 @@ public class ValidarVehiculoDto {
         this.pesoVehiculo = pesoVehiculo;
     }
 
-    public String getEstadoVehiculo() {
+    public int getEstadoVehiculo() {
         return estadoVehiculo;
     }
 
-    public void setEstadoVehiculo(String estadoVehiculo) {
+    public void setEstadoVehiculo(int estadoVehiculo) {
         this.estadoVehiculo = estadoVehiculo;
     }
 

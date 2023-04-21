@@ -38,21 +38,16 @@ public class BcParcialidadesService {
         
         //agregar logica para cambiar el estado de los vehiculos y/o transportistas 
         //en el sistema del agricultor. 
-        
-        BcCuentaCorriente cuenta = bccrRepository.findByNumeroCuenta(parcialidadDto.getNumeroCuenta());
-        BcEstados estadoEnruta = berRepository.findByIdEstado(11); //parcialidad en Ruta
-        
         BcParcialidades parcialidad = new BcParcialidades(
-                cuenta,
-                estadoEnruta,
+                parcialidadDto.getNumeroCuenta(),
+                11, //parcialidad en 
                 parcialidadDto.getPeso(),
                 new Date(),
                 null,
                 parcialidadDto.getLicenciasTransportistas(),
                 parcialidadDto.getPlacaVehiculo(),
                 "usurio1",
-                new Date(),
-                null
+                new Date()
         );
         
         BcParcialidades parcialidadRegistrada = bpRepository.save(parcialidad);

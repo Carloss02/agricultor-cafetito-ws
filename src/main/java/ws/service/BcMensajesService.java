@@ -38,8 +38,8 @@ public class BcMensajesService {
     
     public MensajeDto postMensaje(BcMensajes mensaje){
         
-        BcEstados estadoMensaje = bcEstadosRepository.findByIdEstado(24);
-        mensaje.setBcEstados(estadoMensaje);
+        //BcEstados estadoMensaje = bcEstadosRepository.findByIdEstado(24);
+        mensaje.setEstadoMensaje(24); 
         mensajesRepository.save(mensaje);
         
         return mensaje.toMensajeDto();

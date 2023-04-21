@@ -47,10 +47,8 @@ public class AgrMensajesService {
     }
     
     public MensajeDto postMensaje(AgrMensajes mensaje){
-        //obtienne el estado Mensaje Pendiente
-        AgrEstados estadoMensaje = agrEstadosRepository.findByIdEstado(26);
-        // asigna el código del estado
-        mensaje.setAgrEstados(estadoMensaje);
+
+        mensaje.setEstadoMensaje(26); // Mensaje Pendiente
         //guarda mensaje en la tabla
         AgrMensajes mensajeEnviado = mensajesRepository.save(mensaje);
         //devuelve los datos según metodo de mapeo toMensajeDto()
@@ -78,10 +76,9 @@ public class AgrMensajesService {
         
         
         //lógica para enviar el mensaje al sistema del agricultor.        
-        AgrEstados estado = agrEstadosRepository.findByIdEstado(26); 
         AgrMensajes mensaje = new AgrMensajes();
     
-        mensaje.setAgrEstados(estado);
+        mensaje.setEstadoMensaje(26);
         mensaje.setIdCuentaCorriente(mensajeDto.getIdCuentaCorriente());
         mensaje.setNumeroCuenta(mensajeDto.getNumeroCuenta());
         mensaje.setAprobado(mensajeDto.getAprobado());//true/false
@@ -105,7 +102,6 @@ public class AgrMensajesService {
         
         
         //logica para enviar mensaje. 
-        AgrEstados estado = agrEstadosRepository.findByIdEstado(26); //mensaje pendiente
         AgrMensajes mensaje = new AgrMensajes();
         
         mensaje.setNumeroCuenta(parcialidadEntregada.getNumeroCuenta());
@@ -113,7 +109,7 @@ public class AgrMensajesService {
         mensaje.setIdParcialidad(parcialidadEntregada.getIdParcialidad());
         mensaje.setMensaje(parcialidadEntregada.getMensaje());
         mensaje.setFechaCreacion(new Date());
-        mensaje.setAgrEstados(estado);
+        mensaje.setEstadoMensaje(26);
         
         AgrMensajes agrMensajes = mensajesRepository.save(mensaje);
         
@@ -137,7 +133,7 @@ public class AgrMensajesService {
         
         
         //logica para enviar mensaje. 
-        AgrEstados estado = agrEstadosRepository.findByIdEstado(26); //mensaje pendiente
+        //AgrEstados estado = agrEstadosRepository.findByIdEstado(26); //mensaje pendiente
         AgrMensajes mensaje = new AgrMensajes();
         
         mensaje.setNumeroCuenta(mensajeDto.getNumeroCuenta());
@@ -145,7 +141,7 @@ public class AgrMensajesService {
         mensaje.setTotalPesaje(mensajeDto.getTotalPesaje());
         mensaje.setMensaje(mensajeDto.getMensaje());
         mensaje.setFechaCreacion(new Date());
-        mensaje.setAgrEstados(estado);
+        mensaje.setEstadoMensaje(26);
         
         AgrMensajes agrMensajes = mensajesRepository.save(mensaje);
         

@@ -33,7 +33,7 @@ public class AgrTransportistasService {
                 transportista.getNombreTransportista(),
                 transportista.getTelefonoTransportista(),
                 transportista.getEmailTransportista(),
-                transportista.getAgrEstados().getNombreEstado()
+                transportista.getEstadoTransportista()
         );
         
         return transportistaDto;
@@ -46,10 +46,10 @@ public class AgrTransportistasService {
         
         
         //registrando transportista en el sistema del Agricultor
-        AgrEstados estado = aerRepository.findByIdEstado(20); //estado transportista activo
+        //AgrEstados estado = aerRepository.findByIdEstado(20); //estado transportista activo
         AgrTransportistas transportista = new AgrTransportistas(
                 tDto.getLicencia(),
-                estado, 
+                20,  //transportista activo
                 tDto.getTipoLicencia(), 
                 tDto.getNombre(), 
                 tDto.getTelefono(), 

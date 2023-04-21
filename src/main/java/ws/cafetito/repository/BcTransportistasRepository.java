@@ -16,5 +16,5 @@ import ws.cafetito.model.BcTransportistas;
  */
 public interface BcTransportistasRepository extends JpaRepository<BcTransportistas, String>{
     BcTransportistas findByIdLicencia(String idLicencia);
-    List<BcTransportistas> findByBcEstados(BcEstados estado);
+    List<BcTransportistas> findByEstadoTransportista(Integer estadoTransportista);
 }

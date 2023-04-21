@@ -27,10 +27,10 @@ public class AgrVehiculosService {
         //Agregar logica para obtener usuario quien registra el vehiculo. 
         
         //Registrando nuevo vehículo en el sistema del Agricultor
-        AgrEstados estado = aerRepository.findByIdEstado(14); // estado vehiculo activo
+        //AgrEstados estado = aerRepository.findByIdEstado(14); // estado vehiculo activo
         AgrVehiculos vehiculo = new AgrVehiculos(
                 vehiculoDto.getPlaca(),
-                estado, 
+                14, //vehiculo activo
                 vehiculoDto.getMarca(), 
                 vehiculoDto.getModelo(), 
                 vehiculoDto.getColor(), 

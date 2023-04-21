@@ -13,12 +13,12 @@ public class VehiculosAutorizadosDto {
     private String color;
     private String tipoVehiculo; 
     private BigDecimal peso; 
-    private String estado; 
+    private Integer estado; 
 
     public VehiculosAutorizadosDto() {
     }
 
-    public VehiculosAutorizadosDto(String placa, String marca, int modelo, String color, String tipoVehiculo, BigDecimal peso, String estado) {
+    public VehiculosAutorizadosDto(String placa, String marca, int modelo, String color, String tipoVehiculo, BigDecimal peso, Integer estado) {
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
@@ -76,11 +76,11 @@ public class VehiculosAutorizadosDto {
         this.peso = peso;
     }
 
-    public String getEstado() {
+    public Integer getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Integer estado) {
         this.estado = estado;
     }
     
