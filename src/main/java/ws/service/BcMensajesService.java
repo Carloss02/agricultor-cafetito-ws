@@ -8,11 +8,11 @@ package ws.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.cafetito.model.BcEstados;
 import ws.cafetito.model.BcMensajes;
 import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcMensajesRepository;
 import ws.dto.MensajeDto;
+import ws.util.Estados;
 
 /**
  *
@@ -39,7 +39,7 @@ public class BcMensajesService {
     public MensajeDto postMensaje(BcMensajes mensaje){
         
         //BcEstados estadoMensaje = bcEstadosRepository.findByIdEstado(24);
-        mensaje.setEstadoMensaje(24); 
+        mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE); 
         mensajesRepository.save(mensaje);
         
         return mensaje.toMensajeDto();

@@ -7,11 +7,11 @@ package ws.service;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.agricultor.model.AgrEstados;
 import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrVehiculosRepository;
 import ws.dto.RegistrarVehiculoDto;
+import ws.util.Estados;
 
 @Service
 public class AgrVehiculosService {
@@ -30,7 +30,7 @@ public class AgrVehiculosService {
         //AgrEstados estado = aerRepository.findByIdEstado(14); // estado vehiculo activo
         AgrVehiculos vehiculo = new AgrVehiculos(
                 vehiculoDto.getPlaca(),
-                14, //vehiculo activo
+                Estados.VEHICULO_ACTIVO,
                 vehiculoDto.getMarca(), 
                 vehiculoDto.getModelo(), 
                 vehiculoDto.getColor(), 

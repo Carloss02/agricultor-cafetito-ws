@@ -7,12 +7,12 @@ package ws.service;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.agricultor.model.AgrEstados;
 import ws.agricultor.model.AgrTransportistas;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrTransportistasRepository;
 import ws.dto.RegistrarTransportistaDto;
 import ws.dto.ValidarTransportistaDto;
+import ws.util.Estados;
 
 @Service
 public class AgrTransportistasService {
@@ -49,7 +49,7 @@ public class AgrTransportistasService {
         //AgrEstados estado = aerRepository.findByIdEstado(20); //estado transportista activo
         AgrTransportistas transportista = new AgrTransportistas(
                 tDto.getLicencia(),
-                20,  //transportista activo
+                Estados.TRANSPORTISTA_ACTIVO,
                 tDto.getTipoLicencia(), 
                 tDto.getNombre(), 
                 tDto.getTelefono(), 

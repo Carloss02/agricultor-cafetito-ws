@@ -6,7 +6,6 @@ package ws.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.agricultor.model.AgrEstados;
 import ws.agricultor.model.AgrParcialidades;
 import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
@@ -14,6 +13,7 @@ import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrParcialidadesRepository;
 import ws.agricultor.repository.AgrVehiculosRepository;
 import ws.dto.ValidarVehiculoDto;
+import ws.util.Estados;
 
 @Service
 public class AgrParcialidadesService {
@@ -31,7 +31,7 @@ public class AgrParcialidadesService {
     public ValidarVehiculoDto getVehiculoByPlacaEstado(String placa){
         
         //AgrEstados enRuta = aerRepository.findByIdEstado(11);
-        AgrParcialidades parcialidad = apRepository.findByPlacaVehiculoAndEstadoParcialidad(placa, 11);
+        AgrParcialidades parcialidad = apRepository.findByPlacaVehiculoAndEstadoParcialidad(placa, Estados.PAR_EN_RUTA);
         String numeroCuenta = accCuentaRepository.findByIdCuentaCorriente(parcialidad.getIdCuentaCorriente()).getNumeroCuenta();
         
         AgrVehiculos vehiculo = avrRepository.findByPlacaVehiculo(parcialidad.getPlacaVehiculo());

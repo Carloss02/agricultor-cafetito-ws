@@ -7,13 +7,12 @@ package ws.service;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.cafetito.model.BcCuentaCorriente;
-import ws.cafetito.model.BcEstados;
 import ws.cafetito.model.BcParcialidades;
 import ws.cafetito.repository.BcCuentaCorrienteRepository;
 import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcParcialidadesRepository;
 import ws.dto.ParcialidadEnviadaDto;
+import ws.util.Estados;
 
 /**
  *
@@ -40,7 +39,7 @@ public class BcParcialidadesService {
         //en el sistema del agricultor. 
         BcParcialidades parcialidad = new BcParcialidades(
                 parcialidadDto.getNumeroCuenta(),
-                11, //parcialidad en 
+                Estados.PAR_EN_RUTA,
                 parcialidadDto.getPeso(),
                 new Date(),
                 null,

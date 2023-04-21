@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.cafetito.model.BcEstados;
 import ws.cafetito.model.BcTransportistas;
 import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcTransportistasRepository;
 import ws.dto.TransportistasAutorizadosDto;
+import ws.util.Estados;
 
 @Service
 public class BcTransportistasService {
@@ -30,7 +30,7 @@ public class BcTransportistasService {
         
         //busca todos los transportistas con estado Transportista Autorizado
         // y lo asigna a la variable transportistas. 
-        List<BcTransportistas> transportistas = btRepository.findByEstadoTransportista(22);
+        List<BcTransportistas> transportistas = btRepository.findByEstadoTransportista(Estados.TRANSPORTISTA_AUTORIZADO);
         
         //Creamos una un objeto DTO de tipo lista. 
         List<TransportistasAutorizadosDto> transportistasDto = new ArrayList<>();

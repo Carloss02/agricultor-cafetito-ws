@@ -12,12 +12,12 @@ import ws.agricultor.repository.AgrMensajesRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ws.agricultor.model.AgrEstados;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.dto.ConfirmarCuentaDto;
 import ws.dto.CuentaCreadaDto;
 import ws.dto.MensajeDto;
 import ws.dto.SiguienteParcialidadDto;
+import ws.util.Estados;
 
 /**
  *
@@ -48,7 +48,7 @@ public class AgrMensajesService {
     
     public MensajeDto postMensaje(AgrMensajes mensaje){
 
-        mensaje.setEstadoMensaje(26); // Mensaje Pendiente
+        mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE); // Mensaje Pendiente
         //guarda mensaje en la tabla
         AgrMensajes mensajeEnviado = mensajesRepository.save(mensaje);
         //devuelve los datos según metodo de mapeo toMensajeDto()
@@ -78,7 +78,7 @@ public class AgrMensajesService {
         //lógica para enviar el mensaje al sistema del agricultor.        
         AgrMensajes mensaje = new AgrMensajes();
     
-        mensaje.setEstadoMensaje(26);
+        mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE);
         mensaje.setIdCuentaCorriente(mensajeDto.getIdCuentaCorriente());
         mensaje.setNumeroCuenta(mensajeDto.getNumeroCuenta());
         mensaje.setAprobado(mensajeDto.getAprobado());//true/false
@@ -109,7 +109,7 @@ public class AgrMensajesService {
         mensaje.setIdParcialidad(parcialidadEntregada.getIdParcialidad());
         mensaje.setMensaje(parcialidadEntregada.getMensaje());
         mensaje.setFechaCreacion(new Date());
-        mensaje.setEstadoMensaje(26);
+        mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE);
         
         AgrMensajes agrMensajes = mensajesRepository.save(mensaje);
         
@@ -141,7 +141,7 @@ public class AgrMensajesService {
         mensaje.setTotalPesaje(mensajeDto.getTotalPesaje());
         mensaje.setMensaje(mensajeDto.getMensaje());
         mensaje.setFechaCreacion(new Date());
-        mensaje.setEstadoMensaje(26);
+        mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE);
         
         AgrMensajes agrMensajes = mensajesRepository.save(mensaje);
         
