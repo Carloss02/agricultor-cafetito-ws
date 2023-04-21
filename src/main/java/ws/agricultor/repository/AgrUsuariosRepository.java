@@ -5,6 +5,7 @@
  */
 package ws.agricultor.repository;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.agricultor.model.AgrUsuarios;
 
@@ -13,5 +14,5 @@ import ws.agricultor.model.AgrUsuarios;
  * @author carlo
  */
 public interface AgrUsuariosRepository extends JpaRepository<AgrUsuarios, String>{
-    AgrUsuarios findByIdUsuario(String idUsuario);
+    Optional<AgrUsuarios> findByIdUsuario(String idUsuario);
 }

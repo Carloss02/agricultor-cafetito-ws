@@ -36,7 +36,7 @@ public class BcTransportistasService {
         List<TransportistasAutorizadosDto> transportistasDto = new ArrayList<>();
         
         //con un foreach, recorremos la lista de transportistas con estado autorizado
-        transportistas.forEach(transportista -> {
+        transportistas.forEach((transportista) -> {
             //por cada transportista de la lista, mapeamos los datos a un objeto DTO. 
             //y lo agregamos a la lista transportistasDto
             transportistasDto.add(transportista.toAutorizadosDto());

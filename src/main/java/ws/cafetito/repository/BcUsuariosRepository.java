@@ -5,6 +5,7 @@
  */
 package ws.cafetito.repository;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.cafetito.model.BcUsuarios;
 
@@ -13,5 +14,5 @@ import ws.cafetito.model.BcUsuarios;
  * @author carlos
  */
 public interface BcUsuariosRepository extends JpaRepository<BcUsuarios, String>{
-    BcUsuarios findByIdUsuario(String idUsuario);
+    Optional<BcUsuarios> findByIdUsuario(String idUsuario);
 }

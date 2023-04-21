@@ -25,11 +25,6 @@ public class BcUsuariosController {
     @Autowired
     private BcUsuariosService bcUsuariosService;
     
-    @GetMapping("/getMensajeId/{idUsuario}")
-    public BcUsuarios getUsuarioById(@PathVariable String idUsuario){
-        return bcUsuariosService.getUserByUserName(idUsuario);
-    }
-    
     @PostMapping("/crearUsuario")
     public BcUsuarios addUsuario(@RequestBody BcUsuarios usuario){
         return bcUsuariosService.postUser(usuario);

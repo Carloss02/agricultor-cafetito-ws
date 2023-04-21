@@ -205,19 +205,19 @@ public class AgrMensajes  implements java.io.Serializable {
     // metodo que permite mapear los datos que necesito devolver como respuesta. 
     public MensajeDto toMensajeDto() {
         MensajeDto mensajeDto = new MensajeDto(
-                this.getIdMensaje(),
-                this.getNumeroCuenta(),
-                this.getPlacaVehiculo(),
-                this.getIdParcialidad(),
-                this.getParcialidades(),
-                this.getTotalPesaje(),
+                this.getIdMensaje() != null ? this.getIdMensaje() : 0,
+                this.getNumeroCuenta() != null ? this.getNumeroCuenta() : "",
+                this.getPlacaVehiculo() != null ? this.getPlacaVehiculo() : "",
+                this.getIdParcialidad() != null ? this.getIdParcialidad() : 0,
+                this.getParcialidades() != null ? this.getParcialidades() : 0,
+                this.getTotalPesaje() != null ? this.getTotalPesaje() : new BigDecimal(0),
                 this.getAgrEstados().getNombreEstado(),
                 this.getAgrEstados().getIdEstado(),
-                this.getMensaje(),
-                this.getAprobado(),
-                this.getCorreccion(),
-                this.getUsuarioCreacion(),
-                this.getFechaCreacion()
+                this.getMensaje() != null ? this.getMensaje() : "",
+                this.getAprobado() != null ? this.getAprobado() : 0,
+                this.getCorreccion() != null ? this.getCorreccion() : 0,
+                this.getUsuarioCreacion() != null ? this.getUsuarioCreacion() : "",
+                this.getFechaCreacion()              
         );
         return mensajeDto;
     }

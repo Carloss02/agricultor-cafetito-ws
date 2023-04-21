@@ -22,7 +22,7 @@ public class AgrVehiculosService {
     
     //agregar Servicios.
     
-    public RegistrarVehiculoDto registrarVehiculo(RegistrarVehiculoDto vehiculoDto){
+    public RegistrarVehiculoDto registrarVehiculo(RegistrarVehiculoDto vehiculoDto, String username){
         
         //Agregar logica para obtener usuario quien registra el vehiculo. 
         
@@ -36,7 +36,7 @@ public class AgrVehiculosService {
                 vehiculoDto.getColor(), 
                 vehiculoDto.getTipo(), 
                 vehiculoDto.getPeso(),
-                "user1", 
+                username, 
                 new Date()
         );
                 
