@@ -6,6 +6,8 @@ package ws.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ws.dto.RegistrarTransportistaDto;
 import ws.dto.ValidarTransportistaDto;
 import ws.service.AgrTransportistasService;
+import ws.service.AgrUsuariosService;
+import ws.util.Roles;
+import ws.util.RolesUtil;
 
 @RestController
 @RequestMapping("/agricultor/transportistas")
@@ -22,6 +27,9 @@ public class AgrTransportistasController {
     
     @Autowired
     private AgrTransportistasService atService;
+    @Autowired
+    private AgrUsuariosService agrUsuariosService;
+    
     
     
     @Operation(summary = "Obtiene los datos de un transportista para validar en Garita de Beneficio de Café.")
@@ -32,7 +40,16 @@ public class AgrTransportistasController {
     
     @Operation(summary = "Servicio que registra un transportistas en el sistema del agricultor y Beneficio de café.")
     @PostMapping("/registrar")
-    public RegistrarTransportistaDto registrarVehiculo(@RequestBody RegistrarTransportistaDto transportistaDto){
-        return atService.registrarTransportista(transportistaDto);
+    public RegistrarTransportistaDto registrarVehiculo(@RequestBody RegistrarTransportistaDto transportistaDto, Authentication authentication){
+        String username = authentication.getName();   
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_AGRICULTOR_ADMIN)){
+            return atService.registrarTransportista(transportistaDto, username);
+            
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        }   
+        
     }
 }

@@ -5,12 +5,14 @@
 package ws.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.cafetito.model.BcTransportistas;
 import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcTransportistasRepository;
+import ws.dto.RegistrarTransportistaDto;
 import ws.dto.TransportistasAutorizadosDto;
 import ws.util.Estados;
 
@@ -43,5 +45,34 @@ public class BcTransportistasService {
         });
         
         return transportistasDto; 
+    }
+    
+    public BcTransportistas registrarTransportista(RegistrarTransportistaDto tDto, String username){
+        BcTransportistas transportista = new BcTransportistas(
+                tDto.getLicencia(),
+                Estados.TRANSPORTISTA_ACTIVO,
+                tDto.getTipoLicencia(), 
+                tDto.getNombre(), 
+                tDto.getTelefono(), 
+                tDto.getEmail(), 
+                username, 
+                new Date()
+        );
+        return btRepository.save(transportista);
+        
+    }
+    
+    public String autorizarTrasportista(String licencia){
+        BcTransportistas transportista = btRepository.findByIdLicencia(licencia);
+        transportista.setEstadoTransportista(Estados.TRANSPORTISTA_AUTORIZADO);
+        btRepository.save(transportista);
+        return "Vehículo Autorizado";
+    }
+    
+    public String rechazarTransportista(String licencia){
+        BcTransportistas transportista = btRepository.findByIdLicencia(licencia);
+        transportista.setEstadoTransportista(Estados.TRANSPORTISTA_RECHAZADO);
+        btRepository.save(transportista);
+        return "Vehículo Rechazado";
     }
 }

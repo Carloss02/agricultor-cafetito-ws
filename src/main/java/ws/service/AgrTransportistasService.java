@@ -9,7 +9,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrTransportistas;
-import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrTransportistasRepository;
 import ws.dto.RegistrarTransportistaDto;
 import ws.dto.ValidarTransportistaDto;
@@ -20,7 +19,7 @@ public class AgrTransportistasService {
     @Autowired
     private AgrTransportistasRepository atRepository;
     @Autowired
-    private AgrEstadosRepository aerRepository;
+    private BcTransportistasService bcTransportistasService;
     
     //agregar servicios
     
@@ -41,11 +40,9 @@ public class AgrTransportistasService {
     }
     
     
-    public RegistrarTransportistaDto registrarTransportista(RegistrarTransportistaDto tDto){
+    public RegistrarTransportistaDto registrarTransportista(RegistrarTransportistaDto tDto, String username){
         
-        //agregar logica para obtener el usuario quien registra al transportista
-        
-        
+
         //registrando transportista en el sistema del Agricultor
         //AgrEstados estado = aerRepository.findByIdEstado(20); //estado transportista activo
         AgrTransportistas transportista = new AgrTransportistas(
@@ -55,13 +52,14 @@ public class AgrTransportistasService {
                 tDto.getNombre(), 
                 tDto.getTelefono(), 
                 tDto.getEmail(), 
-                "User3", 
+                username, 
                 new Date()
         );
         
         atRepository.save(transportista);
         
         //agregar logica para registrar al transportista en el sistema del beneficio de café
+        bcTransportistasService.registrarTransportista(tDto, username);
         
         return tDto; 
     }

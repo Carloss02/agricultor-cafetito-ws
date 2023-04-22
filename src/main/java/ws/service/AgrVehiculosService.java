@@ -16,6 +16,8 @@ import ws.util.Estados;
 public class AgrVehiculosService {
     @Autowired
     private AgrVehiculosRepository avRepository;
+    @Autowired 
+    private BcVehiculosService bcVehiculosService;
 
     //agregar Servicios.
     
@@ -40,6 +42,7 @@ public class AgrVehiculosService {
         avRepository.save(vehiculo);
         
         //Agregar logica para registrar vehiculo en el sistema de Beneficio de Café. 
+        bcVehiculosService.registrarVehiculo(vehiculoDto, username);
         
         return vehiculoDto;
     }

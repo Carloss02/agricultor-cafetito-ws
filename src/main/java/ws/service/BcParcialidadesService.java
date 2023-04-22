@@ -70,18 +70,12 @@ public class BcParcialidadesService {
     
     public BcParcialidades replicarParcialidad(ParcialidadEnviadaDto dto, String username){
         
-        BcParcialidades bcParcialidad = new BcParcialidades(
-                dto.getIdParcialidad(),
-                dto.getNumeroCuenta(),
-                Estados.PAR_EN_RUTA,
-                dto.getPeso(), 
-                new Date(), 
-                null, 
-                dto.getLicenciasTransportistas(), 
-                dto.getPlacaVehiculo(), 
-                username, 
-                new Date()
-        );
+        BcParcialidades bcParcialidad = bpRepository.findByIdParcialidad(dto.getIdParcialidad());
+        
+        bcParcialidad.setEstadoParcialidad(Estados.PAR_EN_RUTA);
+        bcParcialidad.setPlacaVehiculo(dto.getPlacaVehiculo());
+        bcParcialidad.setLicenciasTransportistas(dto.getLicenciasTransportistas());
+        bcParcialidad.setUsuarioCreacion(username);
 
         return bpRepository.save(bcParcialidad);
     }

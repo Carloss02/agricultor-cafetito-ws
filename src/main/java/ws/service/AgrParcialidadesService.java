@@ -13,6 +13,7 @@ import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrParcialidadesRepository;
 import ws.agricultor.repository.AgrVehiculosRepository;
+import ws.cafetito.model.BcParcialidades;
 import ws.dto.ParcialidadEnviadaDto;
 import ws.dto.ValidarVehiculoDto;
 import ws.util.Estados;
@@ -29,6 +30,7 @@ public class AgrParcialidadesService {
     private BcParcialidadesService bcParcialidadesService;
     @Autowired
     private AgrVehiculosService avsService;
+    @Autowired
     private AgrTransportistasService atsService;
     @Autowired
     private BcMensajesService bcMensajesService;
@@ -60,29 +62,23 @@ public class AgrParcialidadesService {
     }
     
     public ParcialidadEnviadaDto enviarParcialidad(ParcialidadEnviadaDto dto, String username){
+        //actualizando tabla agricultor parcialidades
+        AgrParcialidades agrParcialidad = apRepository.findByIdParcialidadBeneficio(dto.getIdParcialidad());
         
-        //Creando registro al sistema del agricultor
-        AgrParcialidades agrParcialidad = new AgrParcialidades(
-                dto.getIdCuentaCorriente(), 
-                Estados.PAR_EN_RUTA, 
-                dto.getPeso(), 
-                new Date(), 
-                null, 
-                dto.getLicenciasTransportistas(), 
-                dto.getPlacaVehiculo(), 
-                username, 
-                new Date()
-        );
+        agrParcialidad.setEstadoParcialidad(Estados.PAR_EN_RUTA);
+        agrParcialidad.setPlacaVehiculo(dto.getPlacaVehiculo());
+        agrParcialidad.setLicenciasTransportistas(dto.getLicenciasTransportistas());
+        agrParcialidad.setUsuarioCreacion(username);
         
-        AgrParcialidades parcialidadRegistrada = apRepository.save(agrParcialidad);
-        dto.setIdParcialidad(parcialidadRegistrada.getIdParcialidad());
+        apRepository.saveAndFlush(agrParcialidad);
         
-        //replicando registro al sistema cafetito
+        //actualizando registro al sistema cafetito
         bcParcialidadesService.replicarParcialidad(dto, username);
-        
+         
         //Cambiando estado de vehículo asignado.
         avsService.cambiarEstadoVehiculo(dto.getPlacaVehiculo(), Estados.VEHICULO_ASIGNADO_EN_RUTA);
         //Cambiando estado de transportistas asignados. 
+        System.out.println("lic: " + dto.getLicenciasTransportistas());
         atsService.cambiarEstadoTransportista(dto.getLicenciasTransportistas(), Estados.TRANSPORTISTA_ASIGNADO_EN_RUTA);
 
         //enviando mensaje al beneficio de café con los datos de la parcialidad a Enviar. 
@@ -91,7 +87,7 @@ public class AgrParcialidadesService {
     }
     
     public void actualizarEstadoParcialidad(int idParcialida, int idEstado){
-        AgrParcialidades parcialidad = apRepository.findByIdParcialidad(idParcialida);
+        AgrParcialidades parcialidad = apRepository.findByIdParcialidadBeneficio(idParcialida);
         parcialidad.setEstadoParcialidad(idEstado);
         apRepository.save(parcialidad);
     }
