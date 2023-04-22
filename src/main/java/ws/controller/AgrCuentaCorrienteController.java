@@ -9,13 +9,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ws.dto.CreacionCuentaDto;
 import ws.dto.CuentaDto;
 import ws.dto.TransportistasDto;
 import ws.dto.VehiculosAsignadosDto;
 import ws.service.AgrCuentaCorrienteService;
+import ws.service.AgrUsuariosService;
+import ws.util.Roles;
+import ws.util.RolesUtil;
 
 @RestController
 @RequestMapping("/agricultor/cuenta")
@@ -23,6 +31,9 @@ public class AgrCuentaCorrienteController {
     
     @Autowired
     private AgrCuentaCorrienteService accService; 
+    
+    @Autowired 
+    private AgrUsuariosService agrUsuariosService;
     
     @Operation(summary = "Simulando datos de una cuenta usando dtos")
     @GetMapping()
@@ -67,5 +78,25 @@ public class AgrCuentaCorrienteController {
         
         
         return cuenta;
+    }
+    
+    @Operation(summary = "Obtiene una cuenta con los detalles respectivos en base al id")
+    @PostMapping("/crear")
+    public Boolean agregarCuenta(
+            Authentication authentication,
+            @RequestBody CreacionCuentaDto dto){
+        
+        String username = authentication.getName();
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_VENTAS)){
+            return accService.agregarCuenta(dto, username);
+        }else{
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        
+        }
+        
+        
     }
 }

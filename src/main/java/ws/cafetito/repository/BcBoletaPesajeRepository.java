@@ -14,4 +14,6 @@ import ws.cafetito.model.BcBoletaPesaje;
  */
 public interface BcBoletaPesajeRepository extends JpaRepository<BcBoletaPesaje, Integer>{
     BcBoletaPesaje findByIdBoleta(Integer idBoleta);
+    
+    BcBoletaPesaje findByIdParcialidad(Integer idParcialidad);
 }

@@ -14,5 +14,8 @@ import ws.agricultor.model.AgrParcialidades;
  */
 public interface AgrParcialidadesRepository extends JpaRepository<AgrParcialidades, Integer>{
     AgrParcialidades findByIdParcialidad(Integer idParcialidad);
+    
     AgrParcialidades findByPlacaVehiculoAndEstadoParcialidad(String placa, Integer estado);
+    
+    AgrParcialidades findByIdParcialidadBeneficio(Integer idParcialidadBeneficio);
 }

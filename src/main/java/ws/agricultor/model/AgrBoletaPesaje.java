@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_boleta_pesaje"
     ,catalog="db_agricultor"
@@ -30,19 +32,20 @@ public class AgrBoletaPesaje  implements java.io.Serializable {
     public AgrBoletaPesaje() {
     }
 
-	
     public AgrBoletaPesaje(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public AgrBoletaPesaje(Integer idParcialidad, BigDecimal resultadoPesaje, Date fechaHoraIngreso, Date fechaHoraSalida, String usuarioCreacion, Date fechaCreacion) {
-       this.idParcialidad = idParcialidad;
-       this.resultadoPesaje = resultadoPesaje;
-       this.fechaHoraIngreso = fechaHoraIngreso;
-       this.fechaHoraSalida = fechaHoraSalida;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public AgrBoletaPesaje(Integer idBoleta, Integer idParcialidad, BigDecimal resultadoPesaje, Date fechaHoraIngreso, Date fechaHoraSalida, String usuarioCreacion, Date fechaCreacion) {
+        this.idBoleta = idBoleta;
+        this.idParcialidad = idParcialidad;
+        this.resultadoPesaje = resultadoPesaje;
+        this.fechaHoraIngreso = fechaHoraIngreso;
+        this.fechaHoraSalida = fechaHoraSalida;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
-   
+
      @Id @GeneratedValue(strategy=IDENTITY)
 
     

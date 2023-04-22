@@ -8,8 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 import ws.dto.VehiculosAutorizadosDto;
 
+@Builder
 @Entity
 @Table(name="bc_vehiculos", schema="db_cafetito")
 public class BcVehiculos  implements java.io.Serializable {

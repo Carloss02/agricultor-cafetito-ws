@@ -11,10 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_cuenta_corriente"
-    ,catalog="db_agricultor"
+    ,schema="db_agricultor"
 )
 public class AgrCuentaCorriente  implements java.io.Serializable {
 
@@ -31,19 +33,27 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
     public AgrCuentaCorriente() {
     }
 
-	
     public AgrCuentaCorriente(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public AgrCuentaCorriente(Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados) {
-       this.estadoCuenta = estadoCuenta;
-       this.numeroCuenta = numeroCuenta;
-       this.pesoTotal = pesoTotal;
-       this.cantidadParcialidades = cantidadParcialidades;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
-       this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+
+    public AgrCuentaCorriente(Integer estadoCuenta, String numeroCuenta) {
+        this.estadoCuenta = estadoCuenta;
+        this.numeroCuenta = numeroCuenta;
     }
+    
+    public AgrCuentaCorriente(Integer idCuentaCorriente, Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados) {
+        this.idCuentaCorriente = idCuentaCorriente;
+        this.estadoCuenta = estadoCuenta;
+        this.numeroCuenta = numeroCuenta;
+        this.pesoTotal = pesoTotal;
+        this.cantidadParcialidades = cantidadParcialidades;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+        this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+    }
+
+    
    
      @Id @GeneratedValue(strategy=IDENTITY)
 

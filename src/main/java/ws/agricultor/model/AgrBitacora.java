@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_bitacora"
     ,catalog="db_agricultor"
@@ -28,18 +30,21 @@ public class AgrBitacora  implements java.io.Serializable {
     public AgrBitacora() {
     }
 
-	
     public AgrBitacora(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public AgrBitacora(String nombreTabla, String idRegistro, Character tipoOperacion, String usuarioCreacion, Date fechaCreacion, String datos) {
-       this.nombreTabla = nombreTabla;
-       this.idRegistro = idRegistro;
-       this.tipoOperacion = tipoOperacion;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
-       this.datos = datos;
+
+    public AgrBitacora(Integer idBitacora, String nombreTabla, String idRegistro, Character tipoOperacion, String usuarioCreacion, Date fechaCreacion, String datos) {
+        this.idBitacora = idBitacora;
+        this.nombreTabla = nombreTabla;
+        this.idRegistro = idRegistro;
+        this.tipoOperacion = tipoOperacion;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+        this.datos = datos;
     }
+
+    
    
      @Id @GeneratedValue(strategy=IDENTITY)
 
@@ -104,7 +109,7 @@ public class AgrBitacora  implements java.io.Serializable {
     }
 
     
-    @Column(name="DATOS", length=200)
+    @Column(name="DATOS", length=500)
     public String getDatos() {
         return this.datos;
     }

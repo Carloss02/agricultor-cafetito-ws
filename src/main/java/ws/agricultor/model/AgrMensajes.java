@@ -10,8 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 import ws.dto.MensajeDto;
 
+@Builder
 @Entity
 @Table(name="agr_mensajes"
     ,catalog="db_agricultor"
@@ -36,7 +38,6 @@ public class AgrMensajes  implements java.io.Serializable {
     public AgrMensajes() {
     }
 
-	
     public AgrMensajes(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
@@ -56,10 +57,8 @@ public class AgrMensajes  implements java.io.Serializable {
         this.fechaCreacion = fechaCreacion;
         this.idCuentaCorriente = idCuentaCorriente;
     }
+
     
-    
-    
-   
      @Id @GeneratedValue(strategy=IDENTITY)
 
     

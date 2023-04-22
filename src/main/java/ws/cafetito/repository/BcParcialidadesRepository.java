@@ -5,6 +5,7 @@
  */
 package ws.cafetito.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.cafetito.model.BcParcialidades;
 
@@ -14,4 +15,7 @@ import ws.cafetito.model.BcParcialidades;
  */
 public interface BcParcialidadesRepository extends JpaRepository<BcParcialidades, Integer>{
     BcParcialidades findByIdParcialidad(Integer idParcialidad);
+    
+    List<BcParcialidades> findByNumeroCuenta(String numeroCuenta);
+    
 }

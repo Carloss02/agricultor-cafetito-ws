@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_vehiculos"
     ,catalog="db_agricultor"

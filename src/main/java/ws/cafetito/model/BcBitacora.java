@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="bc_bitacora", schema="db_cafetito")
 public class BcBitacora  implements java.io.Serializable {
@@ -27,18 +29,22 @@ public class BcBitacora  implements java.io.Serializable {
     public BcBitacora() {
     }
 
-	
     public BcBitacora(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public BcBitacora(String nombreTabla, String idRegistro, Character tipoOperacion, String usuarioCreacion, Date fechaCreacion, String datos) {
-       this.nombreTabla = nombreTabla;
-       this.idRegistro = idRegistro;
-       this.tipoOperacion = tipoOperacion;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
-       this.datos = datos;
+
+    public BcBitacora(Integer idBitacora, String nombreTabla, String idRegistro, Character tipoOperacion, String usuarioCreacion, Date fechaCreacion, String datos) {
+        this.idBitacora = idBitacora;
+        this.nombreTabla = nombreTabla;
+        this.idRegistro = idRegistro;
+        this.tipoOperacion = tipoOperacion;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+        this.datos = datos;
     }
+
+	
+    
    
      @Id @GeneratedValue(strategy=IDENTITY)
 
@@ -103,7 +109,7 @@ public class BcBitacora  implements java.io.Serializable {
     }
 
     
-    @Column(name="DATOS", length=200)
+    @Column(name="DATOS", length=500)
     public String getDatos() {
         return this.datos;
     }

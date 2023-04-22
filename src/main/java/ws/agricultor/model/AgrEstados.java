@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_estados"
     ,catalog="db_agricultor"
@@ -23,22 +25,23 @@ public class AgrEstados  implements java.io.Serializable {
      private Character estado;
      private String usuarioCreacion;
      private Date fechaCreacion;
-     
+
     public AgrEstados() {
     }
 
-	
     public AgrEstados(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public AgrEstados(String nombreEstado, String descripcion, Character estado, String usuarioCreacion, Date fechaCreacion) {
-       this.nombreEstado = nombreEstado;
-       this.descripcion = descripcion;
-       this.estado = estado;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public AgrEstados(Integer idEstado, String nombreEstado, String descripcion, Character estado, String usuarioCreacion, Date fechaCreacion) {
+        this.idEstado = idEstado;
+        this.nombreEstado = nombreEstado;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
-   
+
      @Id @GeneratedValue(strategy=IDENTITY)
 
     

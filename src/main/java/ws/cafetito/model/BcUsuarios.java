@@ -7,7 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="bc_usuarios", schema="db_cafetito")
 public class BcUsuarios  implements java.io.Serializable {
@@ -26,22 +28,25 @@ public class BcUsuarios  implements java.io.Serializable {
     public BcUsuarios() {
     }
 
-	
     public BcUsuarios(String idUsuario, Date fechaCreacion) {
         this.idUsuario = idUsuario;
         this.fechaCreacion = fechaCreacion;
     }
+
     public BcUsuarios(String idUsuario, String nombreUsuario, String telefonoUsuario, String emailUsuario, String password, String roles, Character estadoUsuario, String usuarioCreacion, Date fechaCreacion) {
-       this.idUsuario = idUsuario;
-       this.nombreUsuario = nombreUsuario;
-       this.telefonoUsuario = telefonoUsuario;
-       this.emailUsuario = emailUsuario;
-       this.password = password;
-       this.roles = roles;
-       this.estadoUsuario = estadoUsuario;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+        this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.telefonoUsuario = telefonoUsuario;
+        this.emailUsuario = emailUsuario;
+        this.password = password;
+        this.roles = roles;
+        this.estadoUsuario = estadoUsuario;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
+
+	
+    
    
      @Id 
 

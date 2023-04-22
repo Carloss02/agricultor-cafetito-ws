@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="agr_parcialidades"
     ,catalog="db_agricultor"
@@ -29,26 +31,33 @@ public class AgrParcialidades  implements java.io.Serializable {
      private String placaVehiculo;
      private String usuarioCreacion;
      private Date fechaCreacion;
+     private Integer idParcialidadBeneficio;
 
     public AgrParcialidades() {
     }
 
-	
     public AgrParcialidades(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public AgrParcialidades(Integer idCuentaCorriente, Integer estadoMensaje, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
-       this.idCuentaCorriente = idCuentaCorriente;
-       this.estadoParcialidad = estadoMensaje;
-       this.pesoParcialidad = pesoParcialidad;
-       this.fechaParcialidadEnviada = fechaParcialidadEnviada;
-       this.fechaParcialidadEntregada = fechaParcialidadEntregada;
-       this.licenciasTransportistas = licenciasTransportistas;
-       this.placaVehiculo = placaVehiculo;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public AgrParcialidades(Integer estadoParcialidad) {
+        this.estadoParcialidad = estadoParcialidad;
     }
-   
+
+    public AgrParcialidades(Integer idParcialidad, Integer idCuentaCorriente, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion, Integer idParcialidadBeneficio) {
+        this.idParcialidad = idParcialidad;
+        this.idCuentaCorriente = idCuentaCorriente;
+        this.estadoParcialidad = estadoParcialidad;
+        this.pesoParcialidad = pesoParcialidad;
+        this.fechaParcialidadEnviada = fechaParcialidadEnviada;
+        this.fechaParcialidadEntregada = fechaParcialidadEntregada;
+        this.licenciasTransportistas = licenciasTransportistas;
+        this.placaVehiculo = placaVehiculo;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+        this.idParcialidadBeneficio = idParcialidadBeneficio;
+    }
+
      @Id @GeneratedValue(strategy=IDENTITY)
 
     
@@ -147,6 +156,15 @@ public class AgrParcialidades  implements java.io.Serializable {
     
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+    
+    @Column(name="ID_PARCIALIDAD_BENEFICIO", nullable=false)
+    public Integer getIdParcialidadBeneficio() {
+        return idParcialidadBeneficio;
+    }
+
+    public void setIdParcialidadBeneficio(Integer idParcialidadBeneficio) {
+        this.idParcialidadBeneficio = idParcialidadBeneficio;
     }
 
 }

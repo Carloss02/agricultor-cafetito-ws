@@ -29,6 +29,9 @@ public class BcParcialidadesService {
     @Autowired
     private BcCuentaCorrienteRepository bccrRepository;
     
+    @Autowired
+    private BcBitacoraService bcBitacoraService;
+    
     
     
     //Agregar Servicios. 
@@ -56,5 +59,11 @@ public class BcParcialidadesService {
         //agregar lógica para enviar mensaje al sistema del beneficio de café. 
         
         return parcialidadDto;
+    }
+    
+    public Boolean agregarParcialidad(BcParcialidades p){
+        bpRepository.save(p);
+        bcBitacoraService.addRecordBc("bc_parcialidades", p.getIdParcialidad().toString(), 'I', p, p.getUsuarioCreacion());
+        return true;
     }
 }

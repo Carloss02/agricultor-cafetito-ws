@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="bc_parcialidades" , schema="db_cafetito")
 public class BcParcialidades  implements java.io.Serializable {
@@ -31,21 +33,37 @@ public class BcParcialidades  implements java.io.Serializable {
     public BcParcialidades() {
     }
 
-	
     public BcParcialidades(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public BcParcialidades(String numeroCuenta, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
-       this.numeroCuenta = numeroCuenta;
-       this.estadoParcialidad = estadoParcialidad;
-       this.pesoParcialidad = pesoParcialidad;
-       this.fechaParcialidadEnviada = fechaParcialidadEnviada;
-       this.fechaParcialidadEntregada = fechaParcialidadEntregada;
-       this.licenciasTransportistas = licenciasTransportistas;
-       this.placaVehiculo = placaVehiculo;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public BcParcialidades(Integer idParcialidad, String numeroCuenta, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
+        this.idParcialidad = idParcialidad;
+        this.numeroCuenta = numeroCuenta;
+        this.estadoParcialidad = estadoParcialidad;
+        this.pesoParcialidad = pesoParcialidad;
+        this.fechaParcialidadEnviada = fechaParcialidadEnviada;
+        this.fechaParcialidadEntregada = fechaParcialidadEntregada;
+        this.licenciasTransportistas = licenciasTransportistas;
+        this.placaVehiculo = placaVehiculo;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
+
+    public BcParcialidades(String numeroCuenta, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
+        this.numeroCuenta = numeroCuenta;
+        this.estadoParcialidad = estadoParcialidad;
+        this.pesoParcialidad = pesoParcialidad;
+        this.fechaParcialidadEnviada = fechaParcialidadEnviada;
+        this.fechaParcialidadEntregada = fechaParcialidadEntregada;
+        this.licenciasTransportistas = licenciasTransportistas;
+        this.placaVehiculo = placaVehiculo;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+    }
+    
+
+    
    
      @Id @GeneratedValue(strategy=IDENTITY)
 

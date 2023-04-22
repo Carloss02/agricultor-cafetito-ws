@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="bc_cuenta_corriente", schema="db_cafetito")
 public class BcCuentaCorriente  implements java.io.Serializable {

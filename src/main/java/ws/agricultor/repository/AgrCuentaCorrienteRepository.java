@@ -5,6 +5,7 @@
  */
 package ws.agricultor.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.agricultor.model.AgrCuentaCorriente;
 
@@ -14,5 +15,7 @@ import ws.agricultor.model.AgrCuentaCorriente;
  */
 public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCorriente, Integer>{
     AgrCuentaCorriente findByIdCuentaCorriente(Integer idCuentaCorriente);
+    
+    List<AgrCuentaCorriente> findByEstadoCuenta(Integer idEstado);
     
 }

@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name="bc_estados" , schema="db_cafetito")
 public class BcEstados  implements java.io.Serializable {
@@ -27,17 +29,21 @@ public class BcEstados  implements java.io.Serializable {
     public BcEstados() {
     }
 
-	
     public BcEstados(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public BcEstados(String nombreEstado, String descripcion, Character estado, String usuarioCreacion, Date fechaCreacion, Set<BcCuentaCorriente> bcCuentaCorriente, Set<BcTransportistas> bcTransportistas) {
-       this.nombreEstado = nombreEstado;
-       this.descripcion = descripcion;
-       this.estado = estado;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public BcEstados(Integer idEstado, String nombreEstado, String descripcion, Character estado, String usuarioCreacion, Date fechaCreacion) {
+        this.idEstado = idEstado;
+        this.nombreEstado = nombreEstado;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
+
+	
+    
    
     @Id 
     @GeneratedValue(strategy=IDENTITY)

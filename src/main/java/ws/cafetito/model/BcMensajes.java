@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 import ws.dto.MensajeDto;
 
+@Builder
 @Entity
 @Table(name="bc_mensajes" , schema="db_cafetito")
 public class BcMensajes  implements java.io.Serializable {
@@ -34,23 +36,27 @@ public class BcMensajes  implements java.io.Serializable {
     public BcMensajes() {
     }
 
-	
     public BcMensajes(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public BcMensajes(Integer estadoMensaje, String numeroCuenta, String placaVehiculo, Integer idParcialidad, Integer parcialidades, BigDecimal totalPesaje, String mensaje, Integer aprobado, Integer correccion, String usuarioCreacion, Date fechaCreacion) {
-       this.estadoMensaje = estadoMensaje;
-       this.numeroCuenta = numeroCuenta;
-       this.placaVehiculo = placaVehiculo;
-       this.idParcialidad = idParcialidad;
-       this.parcialidades = parcialidades;
-       this.totalPesaje = totalPesaje;
-       this.mensaje = mensaje;
-       this.aprobado = aprobado;
-       this.correccion = correccion;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
+
+    public BcMensajes(Integer idMensaje, Integer estadoMensaje, String numeroCuenta, String placaVehiculo, Integer idParcialidad, Integer parcialidades, BigDecimal totalPesaje, String mensaje, Integer aprobado, Integer correccion, String usuarioCreacion, Date fechaCreacion) {
+        this.idMensaje = idMensaje;
+        this.estadoMensaje = estadoMensaje;
+        this.numeroCuenta = numeroCuenta;
+        this.placaVehiculo = placaVehiculo;
+        this.idParcialidad = idParcialidad;
+        this.parcialidades = parcialidades;
+        this.totalPesaje = totalPesaje;
+        this.mensaje = mensaje;
+        this.aprobado = aprobado;
+        this.correccion = correccion;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
     }
+
+	
+    
    
     @Id 
     @GeneratedValue(strategy=IDENTITY)
