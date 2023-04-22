@@ -18,4 +18,6 @@ public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCor
     
     List<AgrCuentaCorriente> findByEstadoCuenta(Integer idEstado);
     
+    AgrCuentaCorriente findByNumeroCuenta(String numeroCuenta);
+    
 }

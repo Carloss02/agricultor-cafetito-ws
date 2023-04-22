@@ -4,6 +4,7 @@
  */
 package ws.service;
 
+import java.util.Arrays;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,5 +66,15 @@ public class AgrTransportistasService {
         return tDto; 
     }
     
+    public void cambiarEstadoTransportista(String licencias, int idEstado){
+        Arrays.stream(licencias.split(","))
+                .forEach(licencia -> {
+                    AgrTransportistas transportista = atRepository
+                            .findByIdLicencia(licencia.trim());
+                    
+                    transportista.setEstadoTransportista(idEstado);
+                    atRepository.save(transportista);
+                });   
+    }
     
 }

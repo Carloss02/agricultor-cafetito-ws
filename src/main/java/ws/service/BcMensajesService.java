@@ -5,13 +5,14 @@
  */
 package ws.service;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.cafetito.model.BcMensajes;
-import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcMensajesRepository;
 import ws.dto.MensajeDto;
+import ws.dto.ParcialidadEnviadaDto;
 import ws.util.Estados;
 
 /**
@@ -24,8 +25,6 @@ public class BcMensajesService {
     @Autowired
     private BcMensajesRepository mensajesRepository;
     
-    @Autowired
-    private BcEstadosRepository bcEstadosRepository;
     
     public MensajeDto getMensajeByIdMensaje(int idMensaje) {
         BcMensajes mensaje = mensajesRepository.findByIdMensaje(idMensaje);
@@ -52,5 +51,23 @@ public class BcMensajesService {
     public BcMensajes deleteMensaje(BcMensajes mensaje) {
         mensajesRepository.delete(mensaje);
         return mensaje;
+    }
+    
+    public void mensajeParcialidadEnviada(ParcialidadEnviadaDto dto, String username){
+        BcMensajes mensaje = new BcMensajes(
+                Estados.MENSAJE_PENDIENTE, 
+                dto.getNumeroCuenta(), 
+                dto.getPlacaVehiculo(), 
+                dto.getIdParcialidad(), 
+                1, //parcialidades
+                dto.getPeso(),
+                dto.getMensaje(), 
+                0, 
+                0, 
+                username, 
+                new Date()
+        );
+        
+        mensajesRepository.save(mensaje);
     }
 }

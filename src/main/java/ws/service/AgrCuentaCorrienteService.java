@@ -33,5 +33,11 @@ public class AgrCuentaCorrienteService {
         );
         
         return true;
-    } 
+    }
+    
+    public void actualizarEstadoCuenta(String numeroCuenta, int idEstado){
+        AgrCuentaCorriente cuenta = accRepository.findByNumeroCuenta(numeroCuenta);
+        cuenta.setEstadoCuenta(idEstado);
+        accRepository.save(cuenta);
+    }
 }

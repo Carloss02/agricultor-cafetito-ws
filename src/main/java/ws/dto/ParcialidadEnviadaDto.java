@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 public class ParcialidadEnviadaDto {
     
+    int idCuentaCorriente; 
     private String numeroCuenta;
     private String placaVehiculo;
     private int idParcialidad;
@@ -18,13 +19,22 @@ public class ParcialidadEnviadaDto {
     public ParcialidadEnviadaDto() {
     }
 
-    public ParcialidadEnviadaDto(String numeroCuenta, String placaVehiculo, int idParcialidad, BigDecimal peso, String mensaje, String licenciasTransportistas) {
+    public ParcialidadEnviadaDto(int idCuentaCorriente, String numeroCuenta, String placaVehiculo, int idParcialidad, BigDecimal peso, String mensaje, String licenciasTransportistas) {
+        this.idCuentaCorriente = idCuentaCorriente; 
         this.numeroCuenta = numeroCuenta;
         this.placaVehiculo = placaVehiculo;
         this.idParcialidad = idParcialidad;
         this.peso = peso;
         this.mensaje = mensaje;
         this.licenciasTransportistas = licenciasTransportistas;
+    }
+    
+    public int getIdCuentaCorriente() {
+        return idCuentaCorriente;
+    }
+
+    public void setIdCuentaCorriente(int idCuentaCorriente) {
+        this.idCuentaCorriente = idCuentaCorriente;
     }
 
     public String getNumeroCuenta() {

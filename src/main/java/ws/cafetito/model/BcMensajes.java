@@ -55,7 +55,19 @@ public class BcMensajes  implements java.io.Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-	
+    public BcMensajes(Integer estadoMensaje, String numeroCuenta, String placaVehiculo, Integer idParcialidad, Integer parcialidades, BigDecimal totalPesaje, String mensaje, Integer aprobado, Integer correccion, String usuarioCreacion, Date fechaCreacion) {
+        this.estadoMensaje = estadoMensaje;
+        this.numeroCuenta = numeroCuenta;
+        this.placaVehiculo = placaVehiculo;
+        this.idParcialidad = idParcialidad;
+        this.parcialidades = parcialidades;
+        this.totalPesaje = totalPesaje;
+        this.mensaje = mensaje;
+        this.aprobado = aprobado;
+        this.correccion = correccion;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+    }
     
    
     @Id 

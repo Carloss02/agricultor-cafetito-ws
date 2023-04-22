@@ -8,7 +8,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrVehiculos;
-import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrVehiculosRepository;
 import ws.dto.RegistrarVehiculoDto;
 import ws.util.Estados;
@@ -17,9 +16,7 @@ import ws.util.Estados;
 public class AgrVehiculosService {
     @Autowired
     private AgrVehiculosRepository avRepository;
-    @Autowired
-    private AgrEstadosRepository aerRepository;
-    
+
     //agregar Servicios.
     
     public RegistrarVehiculoDto registrarVehiculo(RegistrarVehiculoDto vehiculoDto, String username){
@@ -45,5 +42,11 @@ public class AgrVehiculosService {
         //Agregar logica para registrar vehiculo en el sistema de Beneficio de Café. 
         
         return vehiculoDto;
+    }
+    
+    public void cambiarEstadoVehiculo(String placa, int idEstado){
+        AgrVehiculos vehiculo = avRepository.findByPlacaVehiculo(placa);
+        vehiculo.setEstadoVehiculo(idEstado);
+        avRepository.save(vehiculo);
     }
 }

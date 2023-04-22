@@ -19,7 +19,7 @@ public class WsControllerEstatus {
     @GetMapping
     public WsActiveDto isWebServiceActive(){
         WsActiveDto respuesta = new WsActiveDto(
-                "Web Service Running...",
+                "Web Service Running",
                 true,
                 new Date()
             );

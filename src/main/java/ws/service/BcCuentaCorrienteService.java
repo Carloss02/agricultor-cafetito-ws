@@ -54,13 +54,7 @@ public class BcCuentaCorrienteService {
     private BcParcialidadesRepository bcParcialidadesRepository;
     
     @Autowired
-    private BcVehiculosRepository bcVehiculoRepository;
-    
-    @Autowired
     private AgrVehiculosRepository agrVehiculoRepository;
-    
-    @Autowired
-    private BcTransportistasRepository bcTransportistaRepository;
     
     @Autowired
     private AgrTransportistasRepository agrTransportistaRepository;
@@ -376,4 +370,9 @@ public class BcCuentaCorrienteService {
         return mensaje;
     }
     
+    public void actualizarEstadoCuenta(String numeroCuenta, int idEstado){
+        BcCuentaCorriente cuenta = bccRepository.findByNumeroCuenta(numeroCuenta);
+        cuenta.setEstadoCuenta(idEstado);
+        bccRepository.save(cuenta);
+    }  
 }
