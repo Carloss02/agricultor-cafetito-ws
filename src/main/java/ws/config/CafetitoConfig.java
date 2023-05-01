@@ -22,8 +22,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- *
- * @author carlos
+ * Configuración de la base de datos postgreSQL para los modelos 
+ * del Beneficio de Cafe. 
  */
 @Configuration
 @EnableJpaRepositories(
@@ -33,6 +33,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 )
 @EnableAutoConfiguration
 public class CafetitoConfig {
+    
+    // obteniendo los valores de propiedad de la base de datos
+    // postgreSQL a configurar. 
+    
     @Value("${postgresql.url}")
     private String url;
 
@@ -42,6 +46,10 @@ public class CafetitoConfig {
     @Value("${postgresql.password}")
     private String password;
 
+    /**
+     * Configuración de la fuente de datos para postgreSQL
+     * @return fuente de datos para postgreSQL
+     */
     @Bean
     public DataSource postgresDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -52,7 +60,12 @@ public class CafetitoConfig {
         return dataSource;
     }
 
-    
+    /**
+     * Configuración del administrador de entidades para postgreSQL.
+     *
+     * @param builder Constructor de administradores de entidades
+     * @return administrador de entidades de postgreSQL
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean postgresqlEntityManagerFactory(
             @Qualifier("postgresql") EntityManagerFactoryBuilder builder) {
@@ -64,6 +77,12 @@ public class CafetitoConfig {
     } 
 
 
+    /**
+     * Configuración del administrador de transacciones para postgreSQL.
+     *
+     * @param entityManagerFactory Administrador de entidades de postgreSQL
+     * @return administrador de transacciones de postgreSQL
+     */
     @Bean
     public PlatformTransactionManager postgresqlTransactionManager(
             @Qualifier("postgresqlEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
@@ -71,6 +90,10 @@ public class CafetitoConfig {
     }
    
 
+    /**
+     * Constructor del administrador de entidades para postgreSQL.
+     * @return constructor del administrador de entidades de postgreSQL
+     */
     @Bean
     @Qualifier("postgresql")
     public EntityManagerFactoryBuilder postgresqlEntityManagerFactoryBuilder() {

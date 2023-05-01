@@ -22,8 +22,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- *
- * @author carlos
+ * Configuración de la base de datos MySQL para los modelos del Agricultor. 
  */
 @Configuration
 @EnableJpaRepositories(
@@ -34,6 +33,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableAutoConfiguration
 public class AgricultorConfig {
     
+    // obteniendo los valores de propiedad de la base de datos
+    // MySQL a configurar. 
+    
     @Value("${mysql.url}")
     private String url;
 
@@ -43,6 +45,10 @@ public class AgricultorConfig {
     @Value("${mysql.password}")
     private String password;
 
+    /**
+     * Configuración de la fuente de datos para MySQL
+     * @return fuente de datos para MySQL
+     */
     @Bean
     public DataSource mysqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -53,6 +59,12 @@ public class AgricultorConfig {
         return dataSource;
     }
 
+    /**
+     * Configuración del administrador de entidades para MySQL.
+     *
+     * @param builder Constructor de administradores de entidades
+     * @return administrador de entidades de MySQL
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory(
             @Qualifier("mysql") EntityManagerFactoryBuilder builder) {
@@ -63,12 +75,22 @@ public class AgricultorConfig {
                 .build();
     }
 
+    /**
+     * Configuración del administrador de transacciones para MySQL.
+     *
+     * @param entityManagerFactory Administrador de entidades de MySQL
+     * @return administrador de transacciones de MySQL
+     */
     @Bean
     public PlatformTransactionManager mysqlTransactionManager(
             @Qualifier("mysqlEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
+    /**
+     * Constructor del administrador de entidades para MySQL.
+     * @return constructor del administrador de entidades de MySQL
+     */
     @Bean
     @Qualifier("mysql")
     public EntityManagerFactoryBuilder mysqlEntityManagerFactoryBuilder() {

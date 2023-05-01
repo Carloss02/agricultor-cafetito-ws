@@ -10,8 +10,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import static org.springframework.security.config.Customizer.*;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +27,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Clase de Configuracion de seguridad para la aplicacion
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -34,63 +42,95 @@ public class SecurityConfig {
     private final UserService userService;
     private final RsaKeyProperties rsaKeys;
 
+    /**
+     * Constructor de la clase SecurityConfig
+     * @param userService Servicio de Usuario
+     * @param rsaKeys  Clave RSA
+     */
     public SecurityConfig(UserService userService, RsaKeyProperties rsaKeys) {
         this.userService = userService;
         this.rsaKeys = rsaKeys;
-    }
-    
-    
-    
-    /*
-    @Bean
-    public InMemoryUserDetailsManager user() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("cpirirm")
-                        .password("{noop}password")
-                        .authorities("read")
-                        .build()
-        );
     } 
     
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeRequests(auth -> auth.anyRequest().authenticated())
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(withDefaults())
-                .build();
-    } */
-    
+    /**
+     * Metodo que configura el filtro de seguridad
+     * @param http Configuracion de seguridad
+     * @return El filtro de seguridad
+     * @throws Exception En caso de error al crear el filtro. 
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
-        // Combina ambos servicios de detalles de usuario en un objeto CompositeUserDetailsService
-    //CompositeUserDetailsService userDetailsService = new CompositeUserDetailsService();
-    //userDetailsService.addUserDetailsService(ausService);
-    //userDetailsService.addUserDetailsService(busService);
-        
         return http
-                .csrf(csrf -> csrf.disable()) /** se deshabilita la protección CSRF */
-                .authorizeRequests(auth -> auth
+                .cors(Customizer.withDefaults())
+                .authorizeRequests(auth -> auth  // urls sin seguridad. 
                         .antMatchers("/swagger-ui-custom.html/**").permitAll()
                         .antMatchers("/agricultor-cafetito-ws/**").permitAll()
-                        .anyRequest().authenticated() /** se configura la autorización para que cualquier solicitud requiera autenticación  */
+                        .anyRequest().authenticated()
                 )
-                .userDetailsService(userService) /** Se establece el servicio de detalles de usuario para recuperar la información del usuario autenticado  */
-                .headers(headers -> headers.frameOptions().sameOrigin()) /** Se habilita la opción de mismo origen en las opciones de encabezado  */
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) /** Se configura la seguridad de OAuth2 para que use JWT como mecanismo de autenticación  */
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) /** Se establece la política de creación de sesión como no estable para evitar problemas de gestión de sesiones  */
-                .httpBasic(withDefaults()) /** se utiliza la autenticación HTTP básica con los valores por defecto  */
+                .userDetailsService(userService)
+                .headers(headers -> headers.frameOptions().sameOrigin())
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(withDefaults()) 
                 .build();
     }
     
+    /**
+     * Metodo que configura la fuente de configuracion CORS.
+     * @return La fuente de configuracon CORS.
+     */
+    @Bean 
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
+       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+       source.registerCorsConfiguration("/**", configuration);
+       return source;
+    }
+    
+    
+    /**
+     * Configuracion del Bean que decodifica tokens JWT utilizando la
+     * implementacion NimbusJwtDecoder de Spring Security. 
+     * 
+     * @return El objeto JwtDecoder que utiliza la clave publica RSA almacenada
+     * en la clase RsaKeyProperties para decodificar tokens JWT. 
+     */
+    @Bean
+    JwtDecoder jwtDecoder(){
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
+    }
+    
+    /**
+     * Configuracion del Bean que codifica tokens JWT utilizando la implementacion
+     * NimbusJwtEncoder de Spring Security
+     * 
+     * @return El objeto JwtEncoder que utiliza la clave publica y privada RSA 
+     * almacenadas en la clase RsaKeyProperties para codificar tokens JWT
+     */
+    @Bean
+    JwtEncoder jwtEncoder(){
+        JWK jwk = new RSAKey.Builder(rsaKeys.getPublicKey()).privateKey(rsaKeys.getPrivateKey()).build();
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwks);
+    }
+    
+    /**
+     * Configuracion del Bean de encriptacion de contraseñas utilizando la
+     * implementacion de BCryptPasswordEncoder de Spring Security.
+     * 
+     * @return El objeto PasswordEncoder que utiliza la implementacion
+     * BcryptPasswordEncoder para encriptar contraseñas
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
     
+    /**
+     * Ejemplo para encriptar contraseñas
     /*
     public static void main(String[] args){
         System.out.println("pas: " + new BCryptPasswordEncoder().encode("password1"));
@@ -101,17 +141,4 @@ public class SecurityConfig {
         System.out.println("pas: " + new BCryptPasswordEncoder().encode("admin"));
     } 
     */
-    
-    
-    @Bean
-    JwtDecoder jwtDecoder(){
-        return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
-    }
-    
-    @Bean
-    JwtEncoder jwtEncoder(){
-        JWK jwk = new RSAKey.Builder(rsaKeys.getPublicKey()).privateKey(rsaKeys.getPrivateKey()).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
-    }
 }

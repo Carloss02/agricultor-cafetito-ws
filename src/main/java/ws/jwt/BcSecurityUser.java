@@ -6,7 +6,6 @@ package ws.jwt;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +15,10 @@ import ws.cafetito.model.BcUsuarios;
 public class BcSecurityUser implements UserDetails{
     private final BcUsuarios usuario;
 
+    /**
+     * Crea un nuevo objeto BcSecurityUser para el usuario especificado.
+     * @param usuario El usuario para el cual se creará el objeto.
+     */
     public BcSecurityUser(BcUsuarios usuario) {
         this.usuario = usuario;
     }
@@ -51,6 +54,9 @@ public class BcSecurityUser implements UserDetails{
         return true;
     }
 
+    /**
+     * @return Los roles del usuario como una colección de GrantedAuthority.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(usuario

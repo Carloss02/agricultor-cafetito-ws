@@ -37,7 +37,12 @@ public class AgrUsuariosService implements UserDetailsService{
         return roles;
     }
     
-    //Para seguridad jwt
+    /**
+     * Metodo para cargar los detalles de un usuario del sistema del agricultor. 
+     * @param idUsuario del usuario a cargar
+     * @return objeto UserDetails del usuario encontrado
+     * @throws UsernameNotFoundException en caso de no encontrar el usuario
+     */
     @Override
     public UserDetails loadUserByUsername(String idUsuario) throws UsernameNotFoundException {
 
@@ -49,6 +54,7 @@ public class AgrUsuariosService implements UserDetailsService{
                     .map(AgrSecurityUser::new)
                     .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + idUsuario));
         } catch (UsernameNotFoundException e) {
+            // cargar usuario en el sistema del beneficio de cafe
             userDetails = bcUsuariosService.loadUserByUsername(idUsuario);
         }
 

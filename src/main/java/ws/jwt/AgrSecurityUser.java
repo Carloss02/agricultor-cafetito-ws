@@ -14,6 +14,10 @@ import java.util.Collections;
 public class AgrSecurityUser implements UserDetails{
     private final AgrUsuarios usuario;
 
+    /**
+     * Crea un nuevo objeto AgrSecurityUser para el usuario especificado.
+     * @param usuario El usuario para el cual se creará el objeto.
+     */
     public AgrSecurityUser(AgrUsuarios usuario) {
         this.usuario = usuario;
     }
@@ -49,6 +53,9 @@ public class AgrSecurityUser implements UserDetails{
         return true;
     }
 
+    /**
+     * @return Los roles del usuario como una colección de GrantedAuthority.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

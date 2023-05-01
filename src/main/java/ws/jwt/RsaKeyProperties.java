@@ -9,6 +9,13 @@ import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Clase que se utiliza para leer y almacenar claves RSA(publicas o privadas)
+ * desde un archivo de propiedades. 
+ * 
+ * @ConfigurationProperties se utiliza para especificar el prefijo "rsa" en 
+ * el archivo de propiedades. 
+ */
 @ConfigurationProperties(prefix="rsa")
 public class RsaKeyProperties {
 
@@ -17,11 +24,17 @@ public class RsaKeyProperties {
     
     private RSAPrivateKey privateKey;
 
+    /**
+     * Constructor que inicializa las claves RSA con los valores especificados
+     * en application.properties.
+     *
+     * @param publicKey Clave pública RSA.
+     * @param privateKey Clave privada RSA.
+     */
     public RsaKeyProperties(
-            @Value("${rsa.public-key}")
-            RSAPublicKey publicKey, 
-            @Value("${rsa.private-key}")
-            RSAPrivateKey privateKey) {
+            @Value("${rsa.public-key}") RSAPublicKey publicKey,
+            @Value("${rsa.private-key}") RSAPrivateKey privateKey
+    ) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }

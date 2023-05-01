@@ -23,6 +23,13 @@ public class TokenService {
         this.encoder = encoder;
     }
     
+    
+    /**
+     * Genera un token JWT para la autenticación especificada.
+     *
+     * @param authentication La autenticación para la cual se generará el token.
+     * @return El token JWT generado.
+     */
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
         

@@ -42,7 +42,12 @@ public class BcUsuariosService implements UserDetailsService {
         return roles;
     }
     
-    //Para seguridad jwt
+    /**
+     * Metodo que carga un usuario del sistema del Beneficio de Cafe. 
+     * @param idUsuario del usuario a cargar
+     * @return objeto UserDetails del usuario encontrado
+     * @throws UsernameNotFoundException 
+     */
     @Override
     public UserDetails loadUserByUsername(String idUsuario) throws UsernameNotFoundException {
         return bcUsuariosRepository
