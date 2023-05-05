@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,6 +98,23 @@ public class AgrCuentaCorrienteController {
         
         }
         
+        
+    }
+    
+    @GetMapping("/estado")
+    public List<CreacionCuentaDto> cuentasDetalleEstado(
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_AGRICULTOR_ADMIN)){
+            
+            return accService.getCuentasPorAprobarCorreccion();
+            
+        }else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
         
     }
 }

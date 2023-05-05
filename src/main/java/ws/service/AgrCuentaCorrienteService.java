@@ -5,18 +5,27 @@
 package ws.service;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.dto.CreacionCuentaDto;
+import ws.dto.CuentaCreadaDto;
+import ws.dto.VehiculosAsigDto;
 import ws.util.Estados;
 
 @Service
 public class AgrCuentaCorrienteService {
     @Autowired
     private AgrCuentaCorrienteRepository accRepository;
+    
+    @Autowired
+    private BcCuentaCorrienteService bcCuentaService;
     
     public Boolean agregarCuenta(CreacionCuentaDto dto, String userName){
         
@@ -39,5 +48,15 @@ public class AgrCuentaCorrienteService {
         AgrCuentaCorriente cuenta = accRepository.findByNumeroCuenta(numeroCuenta);
         cuenta.setEstadoCuenta(idEstado);
         accRepository.save(cuenta);
+    }
+    
+    public List<CreacionCuentaDto> getCuentasPorAprobarCorreccion(){
+        List<AgrCuentaCorriente> cuentas = accRepository.getCuentasEstados();
+        
+        List<CreacionCuentaDto> lista = cuentas.stream().map(k ->
+                bcCuentaService.detalleCuenta(k.getIdCuentaCorriente())
+        ).collect(Collectors.toList());
+        
+        return lista;
     }
 }
