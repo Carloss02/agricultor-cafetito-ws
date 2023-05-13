@@ -118,7 +118,7 @@ public class AgrTransportistas  implements java.io.Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="FECHA_CREACION", nullable=false, length=19)
+    @Column(name="FECHA_CREACION", length=19)
     public Date getFechaCreacion() {
         return this.fechaCreacion;
     }

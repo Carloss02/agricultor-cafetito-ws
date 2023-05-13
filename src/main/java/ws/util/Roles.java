@@ -12,4 +12,5 @@ public class Roles {
     public static final String ROL_VENTAS = "AGRICULTOR_VENTAS";
     public static final String ROL_ENVIOS = "AGRICULTOR_ENVIOS";
     public static final String ROL_AGRICULTOR_ADMIN = "AGRICULTOR_ADMIN";
+    public static final String ROL_TRANSPORTISTA = "TRANSPORTISTA";
 }

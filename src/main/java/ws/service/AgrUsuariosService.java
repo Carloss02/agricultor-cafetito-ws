@@ -60,5 +60,4 @@ public class AgrUsuariosService implements UserDetailsService{
 
         return userDetails;
     }
-    
 }

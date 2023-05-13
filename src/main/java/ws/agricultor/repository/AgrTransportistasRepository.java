@@ -5,6 +5,7 @@
  */
 package ws.agricultor.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.agricultor.model.AgrTransportistas;
 
@@ -14,4 +15,6 @@ import ws.agricultor.model.AgrTransportistas;
  */
 public interface AgrTransportistasRepository extends JpaRepository<AgrTransportistas,String>{
     AgrTransportistas findByIdLicencia(String idLicencia);
+    
+    List<AgrTransportistas> findByEstadoTransportista(Integer estado);
 }

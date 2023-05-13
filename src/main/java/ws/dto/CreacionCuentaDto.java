@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 public class CreacionCuentaDto {
     private BigDecimal peso;
     private Integer cantidad;
+    private String agricultor;
+    private String estadoNombre;
+    private Integer estado;
+    private Integer idCuentaCorriente;
     private List<VehiculosAsigDto> vehiculos;
    
     

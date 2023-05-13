@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ws.agricultor.model.AgrTransportistas;
+import ws.agricultor.repository.AgrTransportistasRepository;
 import ws.cafetito.model.BcTransportistas;
 import ws.cafetito.repository.BcEstadosRepository;
 import ws.cafetito.repository.BcTransportistasRepository;
@@ -23,6 +25,9 @@ public class BcTransportistasService {
     
     @Autowired
     private BcEstadosRepository beRepository;
+    
+    @Autowired
+    private AgrTransportistasRepository atRepository;
     
     //agregar servicios 
     
@@ -74,5 +79,9 @@ public class BcTransportistasService {
         transportista.setEstadoTransportista(Estados.TRANSPORTISTA_RECHAZADO);
         btRepository.save(transportista);
         return "Vehículo Rechazado";
+    }
+    
+    public List<AgrTransportistas> getTrasportistasCreados(){
+        return atRepository.findByEstadoTransportista(20);
     }
 }

@@ -5,6 +5,7 @@
  */
 package ws.agricultor.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ws.agricultor.model.AgrVehiculos;
 
@@ -14,4 +15,6 @@ import ws.agricultor.model.AgrVehiculos;
  */
 public interface AgrVehiculosRepository extends JpaRepository<AgrVehiculos, String>{
     AgrVehiculos findByPlacaVehiculo(String placaVehiculo);
+    
+    List<AgrVehiculos> findByEstadoVehiculo(Integer estado);
 }

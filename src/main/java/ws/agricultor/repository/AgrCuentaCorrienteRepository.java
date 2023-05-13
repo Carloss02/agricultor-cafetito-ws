@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ws.agricultor.model.AgrCuentaCorriente;
+import ws.projection.CuentaProjection;
 
 /**
  *
@@ -23,19 +24,35 @@ public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCor
     AgrCuentaCorriente findByNumeroCuenta(String numeroCuenta);
     
     @Query(value = "SELECT \n"
-            + "	acc.NUMERO_CUENTA,\n"
-            + "	acc.PESO_TOTAL,\n"
-            + "	acc.CANTIDAD_PARCIALIDADES,\n"
-            + "	acc.ID_CUENTA_CORRIENTE,\n"
-            + "	acc.ESTADO_CUENTA,\n"
-            + "	acc.USUARIO_CREACION,\n"
-            + "acc.FECHA_CREACION,\n"
-            + "	acc.VEHICULOS_TRANSPORTISTAS_ASIGNADOS\n"
+            + "	acc.PESO_TOTAL as \"peso\",\n"
+            + "	acc.NUMERO_CUENTA as \"numeroCuenta\",\n"
+            + "	acc.CANTIDAD_PARCIALIDADES as \"cantidad\",\n"
+            + "	acc.ID_CUENTA_CORRIENTE as \"idCuentaCorriente\",\n"
+            + "	acc.ESTADO_CUENTA as \"estado\",\n"
+            + "	au.NOMBRE_USUARIO as \"agricultor\",\n"
+            + "	ae.NOMBRE_ESTADO as \"estadoNombre\"\n"
             + "FROM agr_cuenta_corriente acc \n"
-            + "INNER JOIN agr_parcialidades ap \n"
-            + "ON acc.ID_CUENTA_CORRIENTE = ap.ID_CUENTA_CORRIENTE \n"
-            + "WHERE acc.ESTADO_CUENTA in (1,8,9)\n"
-            + "ORDER BY ap.ID_CUENTA_CORRIENTE", nativeQuery = true)
-    List<AgrCuentaCorriente> getCuentasEstados();
+            + "INNER JOIN agr_estados ae \n"
+            + "ON ae.ID_ESTADO = acc.ESTADO_CUENTA \n"
+            + "INNER JOIN agr_usuarios au \n"
+            + "ON au.ID_USUARIO = acc.USUARIO_CREACION \n"
+            + "WHERE acc.ESTADO_CUENTA in (:estados)\n"
+            + "ORDER BY acc.ID_CUENTA_CORRIENTE", nativeQuery = true)
+    List<CuentaProjection> getCuentasEstados(@Param("estados") List<Integer> estados);
+    
+    @Query(value = "SELECT \n"
+            + "	acc.PESO_TOTAL as \"peso\",\n"
+            + "	acc.CANTIDAD_PARCIALIDADES as \"cantidad\",\n"
+            + "	acc.ID_CUENTA_CORRIENTE as \"idCuentaCorriente\",\n"
+            + "	acc.ESTADO_CUENTA as \"estado\",\n"
+            + "	au.NOMBRE_USUARIO as \"agricultor\",\n"
+            + "	ae.NOMBRE_ESTADO as \"estadoNombre\"\n"
+            + "FROM agr_cuenta_corriente acc \n"
+            + "INNER JOIN agr_estados ae \n"
+            + "ON ae.ID_ESTADO = acc.ESTADO_CUENTA \n"
+            + "INNER JOIN agr_usuarios au \n"
+            + "ON au.ID_USUARIO = acc.USUARIO_CREACION \n"
+            + "WHERE acc.ID_CUENTA_CORRIENTE = :id", nativeQuery = true)
+    CuentaProjection getCuentaById(@Param("id") Integer idCuenta);
     
 }

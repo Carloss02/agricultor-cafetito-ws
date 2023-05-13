@@ -4,16 +4,23 @@
  */
 package ws.service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.model.AgrTransportistas;
+import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.agricultor.repository.AgrTransportistasRepository;
 import ws.dto.RegistrarTransportistaDto;
 import ws.dto.ValidarTransportistaDto;
+import ws.dto.VehiculosAsigDto;
 import ws.util.Estados;
 
 @Service
@@ -25,6 +32,9 @@ public class AgrTransportistasService {
     
     @Autowired
     private AgrBitacoraService bitacoraService;
+    
+    @Autowired
+    private AgrCuentaCorrienteRepository accRepository;
     
     //agregar servicios
     
@@ -91,17 +101,19 @@ public class AgrTransportistasService {
     }
     
     @Transactional(value = "mysqlTransactionManager")
-    public AgrTransportistas editarVehiculo(AgrTransportistas transportista, String username){
+    public AgrTransportistas editarTransportista(AgrTransportistas transportista, String username){
         AgrTransportistas exist = atRepository.findByIdLicencia(transportista.getIdLicencia());
         
         if(exist != null){
             AgrTransportistas t = atRepository.save(
                     AgrTransportistas.builder()
+                            .idLicencia(exist.getIdLicencia())
                             .estadoTransportista(20)
                             .emailTransportista(transportista.getEmailTransportista())
                             .nombreTransportista(transportista.getNombreTransportista())
                             .telefonoTransportista(transportista.getTelefonoTransportista())
                             .tipoLicencia(transportista.getTipoLicencia())
+                            .fechaCreacion(exist.getFechaCreacion())
                     .build()
             );
             bitacoraService.addRecordAgr("agr_trasnportistas", t.getIdLicencia(), 'U', t, username);
@@ -109,5 +121,23 @@ public class AgrTransportistasService {
         }else{
             return null;
         }
+    }
+    
+    public List<AgrTransportistas> getTrasportistasDisponiblesAutorizados(Integer idCuenta){
+        AgrCuentaCorriente cuenta = accRepository.findByIdCuentaCorriente(idCuenta);
+        
+        Type tipoListaVehiculos = new TypeToken<List<VehiculosAsigDto>>() {}.getType();
+        List<VehiculosAsigDto> autorizados = new Gson().fromJson(cuenta.getVehiculosTransportistasAsignados(), tipoListaVehiculos);
+        List<String> allLicenciasAutorizadas = autorizados.stream()
+        .flatMap(v -> v.getLicencias().stream())
+        .collect(Collectors.toList());
+        
+        List<AgrTransportistas> disponibles = atRepository.findByEstadoTransportista(24);
+        
+        List<AgrTransportistas> filtro = disponibles.stream()
+                .filter(d -> allLicenciasAutorizadas.stream().anyMatch(a -> a.equals(d.getIdLicencia())))
+                .collect(Collectors.toList());
+        
+        return filtro;
     }
 }

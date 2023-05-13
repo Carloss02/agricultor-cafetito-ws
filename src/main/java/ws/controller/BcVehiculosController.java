@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import ws.agricultor.model.AgrVehiculos;
 import ws.dto.VehiculosAutorizadosDto;
 import ws.service.AgrUsuariosService;
+import ws.service.AgrVehiculosService;
+import ws.service.BcUsuariosService;
 import ws.service.BcVehiculosService;
 import ws.util.RolesUtil;
 import ws.util.Roles;
@@ -26,8 +29,17 @@ import ws.util.Roles;
 @RequestMapping("/cafetito/vehiculos")
 public class BcVehiculosController {
     
-    @Autowired private BcVehiculosService bvService;
-    @Autowired private AgrUsuariosService agrUsuariosService;
+    @Autowired 
+    private BcVehiculosService bvService;
+    
+    @Autowired 
+    private BcUsuariosService bcUsuariosService;
+    
+    @Autowired
+    private AgrVehiculosService agrVehiculoService;
+    
+    @Autowired
+    private AgrUsuariosService agrUsuariosService;
     
     
     @Operation(summary = "Obtiene una lista de vehículos autorizados por el Beneficio de Café.")
@@ -53,7 +65,7 @@ public class BcVehiculosController {
     @PostMapping("/autorizar/{placa}")
     public String autorizarVehiculo(@PathVariable String placa, Authentication authentication){
         String username = authentication.getName();
-        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return bvService.autorizarVehiculo(placa);
@@ -66,7 +78,7 @@ public class BcVehiculosController {
     @PostMapping("/rechazar/{placa}")
     public String rechazarVehiculo(@PathVariable String placa, Authentication authentication){
         String username = authentication.getName();
-        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return bvService.rechazarVehículo(placa);
@@ -74,6 +86,35 @@ public class BcVehiculosController {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
         }
+    }
+    
+    @GetMapping("/{placa}")
+    public AgrVehiculos getVehiculosAutorizadosDisponibles(
+            @PathVariable String placa,
+            Authentication authentication){
+        
+        String username = authentication.getName();   
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_ENVIOS)){
+            return agrVehiculoService.getVehiculoByPlaca(placa);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        } 
+    }
+    
+    @GetMapping("/creados")
+    public List<AgrVehiculos> getVehiculosCreados(
+            Authentication authentication){
+        
+        String username = authentication.getName();   
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)){
+            return bvService.getVehiculosCreados();
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        } 
     }
     
 }

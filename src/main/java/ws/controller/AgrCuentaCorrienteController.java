@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ws.agricultor.model.AgrCuentaCorriente;
 import ws.dto.CreacionCuentaDto;
 import ws.dto.CuentaDto;
 import ws.dto.TransportistasDto;
 import ws.dto.VehiculosAsignadosDto;
+import ws.projection.CuentaProjection;
 import ws.service.AgrCuentaCorrienteService;
 import ws.service.AgrUsuariosService;
 import ws.util.Roles;
@@ -109,7 +111,42 @@ public class AgrCuentaCorrienteController {
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_AGRICULTOR_ADMIN)){
             
-            return accService.getCuentasPorAprobarCorreccion();
+            return accService.getCuentasByEstado();
+            
+        }else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+        
+    }
+    
+    @GetMapping("/{estado}")
+    public List<AgrCuentaCorriente> cuentasDetalleEstado(
+            @PathVariable Integer estado,
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_AGRICULTOR_ADMIN)){
+            
+            return accService.getCuentasEstado(estado);
+            
+        }else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+        
+    }
+    
+    @GetMapping("/general")
+    public List<CuentaProjection> cuentasGeneral(
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_VENTAS)){
+            
+            return accService.getCuentasGeneral();
             
         }else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");

@@ -5,8 +5,7 @@
 package ws.service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.dto.CreacionCuentaDto;
-import ws.dto.CuentaCreadaDto;
-import ws.dto.VehiculosAsigDto;
+import ws.projection.CuentaProjection;
 import ws.util.Estados;
 
 @Service
@@ -50,13 +48,33 @@ public class AgrCuentaCorrienteService {
         accRepository.save(cuenta);
     }
     
-    public List<CreacionCuentaDto> getCuentasPorAprobarCorreccion(){
-        List<AgrCuentaCorriente> cuentas = accRepository.getCuentasEstados();
+    public List<CreacionCuentaDto> getCuentasByEstado(){
+        List<Integer> estados = new ArrayList();
+        estados.add(1);
+        estados.add(8);
+        estados.add(9);
+        List<CuentaProjection> cuentas = accRepository.getCuentasEstados(estados);
         
         List<CreacionCuentaDto> lista = cuentas.stream().map(k ->
                 bcCuentaService.detalleCuenta(k.getIdCuentaCorriente())
         ).collect(Collectors.toList());
         
         return lista;
+    }
+    
+    public List<AgrCuentaCorriente> getCuentasEstado(Integer estado){ 
+        
+        return accRepository.findByEstadoCuenta(estado);
+    }
+    
+    public List<CuentaProjection> getCuentasGeneral(){
+        List<Integer> estado = new ArrayList();
+        estado.add(2);
+        estado.add(3);
+        estado.add(4);
+        estado.add(5);
+        estado.add(6);
+        estado.add(7);
+        return accRepository.getCuentasEstados(estado);
     }
 }

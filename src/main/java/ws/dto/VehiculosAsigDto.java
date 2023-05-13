@@ -19,9 +19,6 @@ import ws.agricultor.model.AgrVehiculos;
 public class VehiculosAsigDto {
     private String placa;
     private List<String> licencias;
-    
-    //private BcVehiculos detalleVehiculo;
-    //private List<BcTransportistas> transportistas;
     private AgrVehiculos detalleVehiculo;
     private List<AgrTransportistas> transportistas;
     

@@ -49,9 +49,7 @@ public class AgrVehiculos  implements java.io.Serializable {
        this.fechaCreacion = fechaCreacion;
     }
    
-     @Id 
-
-    
+     @Id     
     @Column(name="PLACA_VEHICULO", unique=true, nullable=false, length=10)
     public String getPlacaVehiculo() {
         return this.placaVehiculo;
@@ -131,7 +129,7 @@ public class AgrVehiculos  implements java.io.Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="FECHA_CREACION", nullable=false, length=19)
+    @Column(name="FECHA_CREACION", length=19)
     public Date getFechaCreacion() {
         return this.fechaCreacion;
     }

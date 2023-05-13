@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import ws.agricultor.model.AgrTransportistas;
 import ws.dto.TransportistasAutorizadosDto;
 import ws.service.AgrUsuariosService;
 import ws.service.BcTransportistasService;
@@ -59,7 +60,7 @@ public class BcTransportistasController {
     }
     
     @PostMapping("/autorizar/{licencia}")
-    public String autorizarVehiculo(@PathVariable String licencia, Authentication authentication){
+    public String autorizarTransportista(@PathVariable String licencia, Authentication authentication){
         String username = authentication.getName();
         String rolesUsuario = agrUsuariosService.getRolesByUser(username);
         
@@ -72,12 +73,28 @@ public class BcTransportistasController {
     }
     
     @PostMapping("/rechazar/{licencia}")
-    public String rechazarVehiculo(@PathVariable String licencia, Authentication authentication){
+    public String rechazarTransportista(
+            @PathVariable String licencia, 
+            Authentication authentication){
         String username = authentication.getName();
         String rolesUsuario = agrUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return btService.rechazarTransportista(licencia);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+    }
+    
+    @GetMapping("/creados")
+    public List<AgrTransportistas> getVehiculoCreados(
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
+            return btService.getTrasportistasCreados();
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");

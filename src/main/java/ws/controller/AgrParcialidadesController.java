@@ -5,6 +5,7 @@
 package ws.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ws.dto.ParcialidadEnviadaDto;
 import ws.dto.ValidarVehiculoDto;
+import ws.projection.ParcialidadProjection;
 import ws.service.AgrParcialidadesService;
 import ws.service.AgrUsuariosService;
 import ws.util.Roles;
@@ -49,4 +51,21 @@ public class AgrParcialidadesController {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
         } 
     }
+    
+    @GetMapping("/{idCuenta}")
+    public List<ParcialidadProjection> getParcialidades(
+            @PathVariable Integer idCuenta, 
+            Authentication authentication){
+        
+        String username = authentication.getName(); 
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_ENVIOS)){
+            return apService.getParcialidadesByCuenta(idCuenta);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        } 
+    }
+    
+    
 }

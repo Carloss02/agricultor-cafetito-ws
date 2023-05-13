@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.cafetito.model.BcBoletaPesaje;
 import ws.agricultor.model.AgrCuentaCorriente;
+import ws.agricultor.model.AgrParcialidades;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrTransportistasRepository;
@@ -28,14 +30,13 @@ import ws.cafetito.model.BcParcialidades;
 import ws.cafetito.repository.BcBoletaPesajeRepository;
 import ws.cafetito.repository.BcCuentaCorrienteRepository;
 import ws.cafetito.repository.BcEstadosRepository;
-import ws.cafetito.repository.BcTransportistasRepository;
 import ws.cafetito.repository.BcParcialidadesRepository;
-import ws.cafetito.repository.BcVehiculosRepository;
 import ws.dto.CreacionCuentaDto;
 import ws.dto.MensajeDto;
 import ws.dto.CuentaCreadaDto;
 import ws.dto.ParamCuentaDto;
 import ws.dto.VehiculosAsigDto;
+import ws.projection.CuentaProjection;
 import ws.util.Estados;
 
 /**
@@ -89,6 +90,8 @@ public class BcCuentaCorrienteService {
     public CreacionCuentaDto detalleCuenta(Integer id) {
 
         AgrCuentaCorriente cuentaCorriente = agrCuentaRepository.findById(id).orElse(null);
+        CuentaProjection cuentaDetalle = agrCuentaRepository.getCuentaById(id);
+        
         Type tipoListaVehiculos = new TypeToken<List<VehiculosAsigDto>>() {}.getType();
         List<VehiculosAsigDto> datos = new Gson().fromJson(cuentaCorriente.getVehiculosTransportistasAsignados(), tipoListaVehiculos);
 
@@ -102,10 +105,16 @@ public class BcCuentaCorrienteService {
         retorno.setPeso(cuentaCorriente.getPesoTotal());
         retorno.setCantidad(cuentaCorriente.getCantidadParcialidades());
         retorno.setVehiculos(datos);
+        retorno.setAgricultor(cuentaDetalle.getAgricultor());
+        retorno.setEstadoNombre(cuentaDetalle.getEstadoNombre());
+        retorno.setEstado(cuentaDetalle.getEstado());
+        retorno.setIdCuentaCorriente(cuentaCorriente.getIdCuentaCorriente());
         return retorno;
     }
     
     public List<CreacionCuentaDto> cuentasDetalles(Integer estado){
+        List<Integer> estados = new ArrayList();
+        estados.add(estado);
         List<AgrCuentaCorriente> cuentas = agrCuentaRepository.findByEstadoCuenta(estado);
         List<CreacionCuentaDto> lista = cuentas.stream().map(k ->
                 this.detalleCuenta(k.getIdCuentaCorriente())
@@ -144,15 +153,22 @@ public class BcCuentaCorrienteService {
 
                     for (int i = 0; i < creadaC.getCantidadParcialidades(); i++) {
                         BcParcialidades parcialidad = new BcParcialidades();
+                        AgrParcialidades agrParcialidad = new AgrParcialidades();
 
                         parcialidad.setNumeroCuenta(creadaC.getNumeroCuenta());
                         parcialidad.setEstadoParcialidad(Estados.PAR_PENDIETE_RECOLECTAR);
                         parcialidad.setFechaCreacion(new Date());
                         parcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades())));
                         parcialidad.setUsuarioCreacion(username);
-                        parcialidad.setFechaCreacion(new Date());
-
                         bcParcialidadService.agregarParcialidad(parcialidad);
+                        
+                        agrParcialidad.setIdCuentaCorriente(cuenta.getIdCuentaCorriente());
+                        agrParcialidad.setEstadoParcialidad(Estados.PAR_PENDIETE_RECOLECTAR);
+                        agrParcialidad.setFechaCreacion(new Date());
+                        agrParcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades())));
+                        agrParcialidad.setUsuarioCreacion(username);                        
+                        agrParcialidadService.agregarParcialidad(agrParcialidad);
+                        
                     }
                     
                     cuenta.setNumeroCuenta(noCuenta);
@@ -374,5 +390,11 @@ public class BcCuentaCorrienteService {
         BcCuentaCorriente cuenta = bccRepository.findByNumeroCuenta(numeroCuenta);
         cuenta.setEstadoCuenta(idEstado);
         bccRepository.save(cuenta);
-    }  
+    } 
+    
+    /*public List<CuentaCreadaProjection> getCuentasBandejas(){
+        List<Integer> estado = new ArrayList();
+        estado.add(2);
+        
+    }*/
 }

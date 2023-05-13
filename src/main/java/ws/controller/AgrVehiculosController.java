@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +59,7 @@ public class AgrVehiculosController {
     }
     
     @PutMapping("/editar")
-    public AgrVehiculos registrarVehiculo(@RequestBody AgrVehiculos vehiculo, Authentication authentication){
+    public AgrVehiculos editarVehiculo(@RequestBody AgrVehiculos vehiculo, Authentication authentication){
         String username = authentication.getName();   
         String rolesUsuario = agrUsuariosService.getRolesByUser(username);
         
@@ -67,6 +68,21 @@ public class AgrVehiculosController {
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
         }   
+    }
+    
+    @GetMapping("/disponible/{idCuenta}")
+    public List<AgrVehiculos> getVehiculosAutorizadosDisponibles(
+            @PathVariable Integer idCuenta,
+            Authentication authentication){
+        
+        String username = authentication.getName();   
+        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_ENVIOS)){
+            return avsService.getVehiculosCuentaDisponiblesAutorizados(idCuenta);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        } 
     }
     
 }

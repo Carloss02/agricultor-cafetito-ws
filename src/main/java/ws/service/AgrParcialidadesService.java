@@ -4,18 +4,17 @@
  */
 package ws.service;
 
-import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrParcialidades;
 import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
-import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrParcialidadesRepository;
 import ws.agricultor.repository.AgrVehiculosRepository;
-import ws.cafetito.model.BcParcialidades;
 import ws.dto.ParcialidadEnviadaDto;
 import ws.dto.ValidarVehiculoDto;
+import ws.projection.ParcialidadProjection;
 import ws.util.Estados;
 
 @Service
@@ -34,6 +33,9 @@ public class AgrParcialidadesService {
     private AgrTransportistasService atsService;
     @Autowired
     private BcMensajesService bcMensajesService;
+    
+    @Autowired
+    private AgrBitacoraService agrBitacoraService;
     
     
     //agregar servicios
@@ -63,7 +65,7 @@ public class AgrParcialidadesService {
     
     public ParcialidadEnviadaDto enviarParcialidad(ParcialidadEnviadaDto dto, String username){
         //actualizando tabla agricultor parcialidades
-        AgrParcialidades agrParcialidad = apRepository.findByIdParcialidadBeneficio(dto.getIdParcialidad());
+        AgrParcialidades agrParcialidad = apRepository.findByIdParcialidad(dto.getIdParcialidad());
         
         agrParcialidad.setEstadoParcialidad(Estados.PAR_EN_RUTA);
         agrParcialidad.setPlacaVehiculo(dto.getPlacaVehiculo());
@@ -87,8 +89,18 @@ public class AgrParcialidadesService {
     }
     
     public void actualizarEstadoParcialidad(int idParcialida, int idEstado){
-        AgrParcialidades parcialidad = apRepository.findByIdParcialidadBeneficio(idParcialida);
+        AgrParcialidades parcialidad = apRepository.findByIdParcialidad(idParcialida);
         parcialidad.setEstadoParcialidad(idEstado);
         apRepository.save(parcialidad);
+    }
+    
+    public Boolean agregarParcialidad(AgrParcialidades p){
+        apRepository.save(p);
+        agrBitacoraService.addRecordAgr("agr_parcialidades", p.getIdParcialidad().toString(), 'I', p, p.getUsuarioCreacion());
+        return true;
+    }
+    
+    public List<ParcialidadProjection> getParcialidadesByCuenta(Integer idCuenta){
+        return apRepository.getParcialidadesByIdCuenta(idCuenta);
     }
 }

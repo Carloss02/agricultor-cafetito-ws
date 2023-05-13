@@ -95,11 +95,11 @@ public class BcCuentaCorrienteController {
         
     }
     
-    @PostMapping("/pesaje/{idParcialidad}")
+    @PostMapping("/pesaje/{idParcialidad}/{peso}")
     public MensajeDto pesajeParcialidad(
             Authentication authentication,
             @PathVariable Integer idParcialidad,
-            @RequestParam BigDecimal peso ){
+            @PathVariable BigDecimal peso ){
         System.out.println("QUE TRAE" + idParcialidad);
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
@@ -116,7 +116,7 @@ public class BcCuentaCorrienteController {
     }
     
     @PostMapping("/tolerancia/{noCuenta}")
-    public MensajeDto pesajeParcialidad(
+    public MensajeDto pesajeParcialidadTolerancia(
             Authentication authentication,
             @PathVariable String noCuenta){
         

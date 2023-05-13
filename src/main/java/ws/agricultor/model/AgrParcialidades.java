@@ -31,7 +31,6 @@ public class AgrParcialidades  implements java.io.Serializable {
      private String placaVehiculo;
      private String usuarioCreacion;
      private Date fechaCreacion;
-     private Integer idParcialidadBeneficio;
 
     public AgrParcialidades() {
     }
@@ -44,7 +43,7 @@ public class AgrParcialidades  implements java.io.Serializable {
         this.estadoParcialidad = estadoParcialidad;
     }
 
-    public AgrParcialidades(Integer idParcialidad, Integer idCuentaCorriente, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion, Integer idParcialidadBeneficio) {
+    public AgrParcialidades(Integer idParcialidad, Integer idCuentaCorriente, Integer estadoParcialidad, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
         this.idParcialidad = idParcialidad;
         this.idCuentaCorriente = idCuentaCorriente;
         this.estadoParcialidad = estadoParcialidad;
@@ -55,7 +54,6 @@ public class AgrParcialidades  implements java.io.Serializable {
         this.placaVehiculo = placaVehiculo;
         this.usuarioCreacion = usuarioCreacion;
         this.fechaCreacion = fechaCreacion;
-        this.idParcialidadBeneficio = idParcialidadBeneficio;
     }
     
     public AgrParcialidades(Integer idCuentaCorriente, Integer estadoMensaje, BigDecimal pesoParcialidad, Date fechaParcialidadEnviada, Date fechaParcialidadEntregada, String licenciasTransportistas, String placaVehiculo, String usuarioCreacion, Date fechaCreacion) {
@@ -68,7 +66,6 @@ public class AgrParcialidades  implements java.io.Serializable {
        this.placaVehiculo = placaVehiculo;
        this.usuarioCreacion = usuarioCreacion;
        this.fechaCreacion = fechaCreacion;
-       this.idParcialidadBeneficio = idParcialidadBeneficio;
     }
 
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -169,15 +166,6 @@ public class AgrParcialidades  implements java.io.Serializable {
     
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
-    }
-    
-    @Column(name="ID_PARCIALIDAD_BENEFICIO", nullable=false)
-    public Integer getIdParcialidadBeneficio() {
-        return idParcialidadBeneficio;
-    }
-
-    public void setIdParcialidadBeneficio(Integer idParcialidadBeneficio) {
-        this.idParcialidadBeneficio = idParcialidadBeneficio;
     }
 
 }

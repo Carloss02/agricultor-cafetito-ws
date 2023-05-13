@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ws.cafetito.model.BcParcialidades;
 import ws.cafetito.repository.BcParcialidadesRepository;
 import ws.dto.ParcialidadEnviadaDto;
+import ws.projection.ParcialidadProjection;
 import ws.util.Estados;
 
 /**
@@ -111,4 +112,14 @@ public class BcParcialidadesService {
         
         return parcialidades.size() == 1; 
     }
+    
+    public List<ParcialidadProjection> getParcialidadPesar(){
+        return bpRepository.getParcialidadesParaPesar();
+    }
+    
+    public List<ParcialidadProjection> getParcialidadesEnRuta(){
+        return bpRepository.getParcialidadesEnRuta();
+    }
+    
+    
 }

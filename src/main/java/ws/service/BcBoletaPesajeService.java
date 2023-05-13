@@ -69,7 +69,7 @@ public class BcBoletaPesajeService {
                 .build());
         bcBitacoraService.addRecordBc("bc_boleta_pesaje", boletaBeneficio.getIdBoleta().toString(), 'I', boletaBeneficio, userName);
         
-        AgrParcialidades parcialidadAgricultor = agrParcialidadesRepository.findByIdParcialidadBeneficio(parcialidad.getIdParcialidad());
+        AgrParcialidades parcialidadAgricultor = agrParcialidadesRepository.findByIdParcialidad(parcialidad.getIdParcialidad());
         
         if(parcialidadAgricultor == null){
             System.out.println("Truena");
