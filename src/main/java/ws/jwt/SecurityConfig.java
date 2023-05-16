@@ -83,7 +83,7 @@ public class SecurityConfig {
     @Bean 
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","https://cafetito-agricultor-app.azurewebsites.net"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","https://cafetito-agricultor-app.azurewebsites.net","https://beneficio-cafe-app.azurewebsites.net"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization","content-type"));
        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
