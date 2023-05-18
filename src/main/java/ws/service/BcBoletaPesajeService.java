@@ -21,6 +21,7 @@ import ws.cafetito.model.BcParcialidades;
 import ws.cafetito.repository.BcBoletaPesajeRepository;
 import ws.cafetito.repository.BcParcialidadesRepository;
 import ws.cafetito.repository.BcVehiculosRepository;
+import ws.projection.BoletaProjection;
 import ws.util.Estados;
 
 @Service
@@ -48,6 +49,9 @@ public class BcBoletaPesajeService {
     
     @Autowired
     private AgrBitacoraService argBitacoraService;
+    
+    @Autowired
+    private AgrParcialidadesService argParcialidadService;
 
     //agregar servicios
     public Map<String, Object> crearBoleta(BcParcialidades parcialidad, BigDecimal pesaje, String userName) {
@@ -57,7 +61,7 @@ public class BcBoletaPesajeService {
         
         BcParcialidades parcialidadModificada = bcParcialidadesRepository.save(parcialidad);
         bcBitacoraService.addRecordBc("bc_parcialidades", parcialidadModificada.getIdParcialidad().toString(), 'U', parcialidadModificada, userName);
-        
+        argParcialidadService.actualizarEstadoParcialidad(parcialidadModificada.getIdParcialidad(), Estados.PAR_ENTREGADA);
         BigDecimal pesajeCafe = pesaje.subtract(bvRepository.findByPlacaVehiculo(parcialidad.getPlacaVehiculo()).getPesoVehiculo());
         
         BcBoletaPesaje boletaBeneficio = bcBoletaPesajeRepository.save(BcBoletaPesaje.builder()
@@ -72,7 +76,7 @@ public class BcBoletaPesajeService {
         AgrParcialidades parcialidadAgricultor = agrParcialidadesRepository.findByIdParcialidad(parcialidad.getIdParcialidad());
         
         if(parcialidadAgricultor == null){
-            System.out.println("Truena");
+            System.out.println("No existe la parcialidad");
             
         }
         
@@ -89,6 +93,11 @@ public class BcBoletaPesajeService {
         boletas.put("boletaAgricultor", boletaPesajeAgricultor);
         
         return boletas;
+    }
+    
+    public BoletaProjection getDatosBoleta(Integer idParcialidad){
+        BoletaProjection boleta = bcBoletaPesajeRepository.findDataBoleta(idParcialidad);
+        return boleta;
     }
 
 }

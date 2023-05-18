@@ -16,4 +16,6 @@ import ws.cafetito.model.BcMensajes;
 public interface BcMensajesRepository extends JpaRepository<BcMensajes, Integer>{
     BcMensajes findByIdMensaje(Integer idMensaje);
     List<BcMensajes> findByNumeroCuenta(String numeroCuenta);
+    
+    BcMensajes findByNumeroCuentaAndAprobado(String noCuenta, Integer aprobado);
 }

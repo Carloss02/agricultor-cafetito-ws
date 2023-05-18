@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ws.agricultor.model.AgrTransportistas;
+import ws.dto.RespuestaDto;
 import ws.dto.TransportistasAutorizadosDto;
 import ws.service.AgrUsuariosService;
 import ws.service.BcTransportistasService;
@@ -60,9 +61,9 @@ public class BcTransportistasController {
     }
     
     @PostMapping("/autorizar/{licencia}")
-    public String autorizarTransportista(@PathVariable String licencia, Authentication authentication){
+    public RespuestaDto autorizarTransportista(@PathVariable String licencia, Authentication authentication){
         String username = authentication.getName();
-        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return btService.autorizarTrasportista(licencia);
@@ -73,11 +74,11 @@ public class BcTransportistasController {
     }
     
     @PostMapping("/rechazar/{licencia}")
-    public String rechazarTransportista(
+    public RespuestaDto rechazarTransportista(
             @PathVariable String licencia, 
             Authentication authentication){
         String username = authentication.getName();
-        String rolesUsuario = agrUsuariosService.getRolesByUser(username);
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return btService.rechazarTransportista(licencia);
@@ -88,13 +89,29 @@ public class BcTransportistasController {
     }
     
     @GetMapping("/creados")
-    public List<AgrTransportistas> getVehiculoCreados(
+    public List<AgrTransportistas> getTransportistasCreados(
             Authentication authentication){
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
             return btService.getTrasportistasCreados();
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+    }
+    
+    @GetMapping("/validar/permiso/{licencia}/{idParcialidad}")
+    public TransportistasAutorizadosDto validarPermisoTransportista(
+            Authentication authentication,
+            @PathVariable String licencia,
+            @PathVariable Integer idParcialidad){
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_AUTORIZAR_INGRESO)) {  
+            return btService.validarPermisoTransportista(licencia, idParcialidad);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");

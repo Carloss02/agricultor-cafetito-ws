@@ -6,11 +6,15 @@ package ws.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ws.cafetito.model.BcCuentaCorriente;
 import ws.cafetito.model.BcParcialidades;
+import ws.cafetito.repository.BcCuentaCorrienteRepository;
 import ws.cafetito.repository.BcParcialidadesRepository;
 import ws.dto.ParcialidadEnviadaDto;
+import ws.dto.RespuestaDto;
 import ws.projection.ParcialidadProjection;
 import ws.util.Estados;
 
@@ -35,6 +39,8 @@ public class BcParcialidadesService {
     @Autowired
     private AgrCuentaCorrienteService accsService;
     
+    @Autowired
+    private BcCuentaCorrienteRepository bccRepository;
     
     //Agregar Servicios. 
     
@@ -81,23 +87,38 @@ public class BcParcialidadesService {
         return bpRepository.save(bcParcialidad);
     }
     
-    public String autorizarIngresoVehículo(int idParcialidad){
-            BcParcialidades bcParcialidad = bpRepository.findByIdParcialidad(idParcialidad);
-            //cambiando estado en el sistema del beneficio de café. 
-            actualizarEstadoParcialidad(idParcialidad, Estados.PAR_PENDIENTE_PESAR);
-            //cambiando estado en el sistema agricultor
-            apsService.actualizarEstadoParcialidad(idParcialidad, Estados.PAR_PENDIENTE_PESAR);
+    public RespuestaDto autorizarIngresoVehículo(int idParcialidad){
+            Optional<BcParcialidades> bcParcialidad = bpRepository.findById(idParcialidad);
+            boolean primeraParcialidad = false;
+            if (bcParcialidad.isPresent()) {               
+                //valida si, es la primera parcialidad, cambia el estado
+                // de la cuenta a Cuenta Abierta. 
+                Optional<BcCuentaCorriente> cuenta = bccRepository.findById(bcParcialidad.get().getNumeroCuenta());
+                if (cuenta.isPresent() && cuenta.get().getEstadoCuenta() == 2) {
+                    List<BcParcialidades> parcialidades = bpRepository.findByNumeroCuenta(bcParcialidad.get().getNumeroCuenta());
+                    primeraParcialidad = parcialidades.stream()
+                            .filter(p -> p.getEstadoParcialidad() == 12).count() == 0;
 
-            //valida si, es la primera parcialidad, cambia el estado
-            // de la cuenta a Cuenta Abierta. 
-            if(esPrimeraParcialidad(bcParcialidad.getNumeroCuenta())){
-                //actualiza cuenta en el sistema del agricultor. 
-                accsService.actualizarEstadoCuenta(bcParcialidad.getNumeroCuenta(), Estados.CUENTA_ABIERTA);
-                //actualiza cuenta en el sistem del beneficio de cafe
-                bccsService.actualizarEstadoCuenta(bcParcialidad.getNumeroCuenta(), Estados.CUENTA_ABIERTA);
+                    if (primeraParcialidad) {
+                        //actualiza cuenta en el sistema del agricultor. 
+                        accsService.actualizarEstadoCuenta(bcParcialidad.get().getNumeroCuenta(), Estados.CUENTA_ABIERTA);
+                        //actualiza cuenta en el sistem del beneficio de cafe
+                        bccsService.actualizarEstadoCuenta(bcParcialidad.get().getNumeroCuenta(), Estados.CUENTA_ABIERTA);
+                    }
+                }                
+                //cambiando estado en el sistema del beneficio de café. 
+                actualizarEstadoParcialidad(idParcialidad, Estados.PAR_PENDIENTE_PESAR);
+                //cambiando estado en el sistema agricultor
+                apsService.actualizarEstadoParcialidad(idParcialidad, Estados.PAR_PENDIENTE_PESAR);
+                
+                RespuestaDto res = new RespuestaDto();
+                res.setTitulo("Ingreso Autorizado");
+                res.setContenido("Puede proceder a ingresar.");
+                return res;
+            }else{
+                return null;
             }
-        
-        return "Ingreso Autorizado";
+            
     }
     
     public void actualizarEstadoParcialidad(int idParcialidad, int idEstado){
@@ -106,12 +127,11 @@ public class BcParcialidadesService {
         bpRepository.save(parcialidad);
     }
     
-    public boolean esPrimeraParcialidad(String numeroCuenta){
-        List<BcParcialidades> parcialidades;
-        parcialidades = bpRepository.findByNumeroCuenta(numeroCuenta);
+    /*public boolean esPrimeraParcialidad(String numeroCuenta){
+        List<BcParcialidades> parcialidades = bpRepository.findByNumeroCuenta(numeroCuenta);
         
         return parcialidades.size() == 1; 
-    }
+    }*/
     
     public List<ParcialidadProjection> getParcialidadPesar(){
         return bpRepository.getParcialidadesParaPesar();
@@ -121,5 +141,9 @@ public class BcParcialidadesService {
         return bpRepository.getParcialidadesEnRuta();
     }
     
+    
+    public List<ParcialidadProjection> getParcialidadesCuenta(String noCuenta){
+        return bpRepository.findByNumeroCuentaBoletaPeso(noCuenta);
+    }
     
 }

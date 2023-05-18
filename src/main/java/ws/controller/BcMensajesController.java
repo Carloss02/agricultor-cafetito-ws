@@ -7,6 +7,8 @@ package ws.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ws.cafetito.model.BcMensajes;
 import ws.dto.MensajeDto;
 import ws.service.BcMensajesService;
+import ws.service.BcUsuariosService;
+import ws.util.Roles;
+import ws.util.RolesUtil;
 
 @RestController
 @RequestMapping("/cafetito/mensajes")
@@ -25,6 +30,9 @@ public class BcMensajesController {
     
     @Autowired
     private BcMensajesService bcMensajeService;
+    
+    @Autowired
+    private BcUsuariosService bcUsuariosService;
     
     @GetMapping("/id/{idMensaje}")
     public MensajeDto getMensajeById(@PathVariable int idMensaje){
@@ -49,5 +57,19 @@ public class BcMensajesController {
     @DeleteMapping("/delete")
     public BcMensajes deleteMensaje(@RequestBody BcMensajes mensaje){
         return bcMensajeService.deleteMensaje(mensaje);
+    }
+    
+    @GetMapping("/tolerancia/{numeroCuenta}")
+    public BcMensajes getMensajeById(
+            @PathVariable String numeroCuenta,
+            Authentication authentication){
+        String username = authentication.getName(); 
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
+            return bcMensajeService.getMensajesByCuentaTolerancia(numeroCuenta);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        } 
     }
 }

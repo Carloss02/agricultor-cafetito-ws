@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import ws.cafetito.model.BcBoletaPesaje;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.model.AgrParcialidades;
+import ws.agricultor.model.AgrTransportistas;
+import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.agricultor.repository.AgrTransportistasRepository;
@@ -35,6 +38,7 @@ import ws.dto.CreacionCuentaDto;
 import ws.dto.MensajeDto;
 import ws.dto.CuentaCreadaDto;
 import ws.dto.ParamCuentaDto;
+import ws.dto.RespuestaDto;
 import ws.dto.VehiculosAsigDto;
 import ws.projection.CuentaProjection;
 import ws.util.Estados;
@@ -86,6 +90,9 @@ public class BcCuentaCorrienteService {
     
     @Autowired
     private AgrParcialidadesService agrParcialidadService;
+    
+    @Autowired
+    private AgrCuentaCorrienteService accsService;
     
     public CreacionCuentaDto detalleCuenta(Integer id) {
 
@@ -224,21 +231,21 @@ public class BcCuentaCorrienteService {
         BcBoletaPesaje boleta = new BcBoletaPesaje();
         
         if(parcialidadBeneficio == null){
-            System.out.println("Truena");
+            System.out.println("No existe la parcialidad");
             return null;
         }
         
         BcCuentaCorriente cuentaBeneficio = bccRepository.findByNumeroCuenta(parcialidadBeneficio.getNumeroCuenta());
         
         if(cuentaBeneficio == null){
-            System.out.println("Truena");
+            System.out.println("No existe la cuenta");
             return null;
         }
         
         List<BcParcialidades> parcialidadesBeneficio = bcParcialidadesRepository.findByNumeroCuenta(cuentaBeneficio.getNumeroCuenta());
         
         if(parcialidadesBeneficio == null || parcialidadesBeneficio.isEmpty()){
-            System.out.println("Truena");
+            System.out.println("No existen las parcialidades");
             return null;
         }
         
@@ -261,6 +268,7 @@ public class BcCuentaCorrienteService {
             System.out.println("PASA ULTIMO");
             cuentaBeneficio.setEstadoCuenta(Estados.PESAJE_FINALIZADO);
             bccRepository.save(cuentaBeneficio);
+            accsService.actualizarEstadoCuenta(cuentaBeneficio.getNumeroCuenta(), Estados.PESAJE_FINALIZADO);
             boleta = (BcBoletaPesaje) bcBoletaPesajeService.crearBoleta(parcialidadPendientePesaje.get(), pesaje, userName).get("boletaBeneficio");
         }
         
@@ -270,6 +278,7 @@ public class BcCuentaCorrienteService {
             System.out.println("PASA PRIMER");
             cuentaBeneficio.setEstadoCuenta(Estados.PESAJE_INICIADO);
             bccRepository.save(cuentaBeneficio);
+            accsService.actualizarEstadoCuenta(cuentaBeneficio.getNumeroCuenta(), Estados.PESAJE_INICIADO);
             
             boleta = (BcBoletaPesaje) bcBoletaPesajeService.crearBoleta(parcialidadPendientePesaje.get(), pesaje, userName).get("boletaBeneficio");
             
@@ -284,6 +293,14 @@ public class BcCuentaCorrienteService {
             boleta = (BcBoletaPesaje) bcBoletaPesajeService.crearBoleta(parcialidadPendientePesaje.get(), pesaje, userName).get("boletaBeneficio");
             System.out.println("PASA INTERMEDIA");
         }
+        AgrVehiculos vehiculo = agrVehiculoRepository.findById(parcialidadPendientePesaje.get().getPlacaVehiculo()).get();
+        vehiculo.setEstadoVehiculo(Estados.VEHICULO_ASIGNADO_DISPONIBLE);
+        agrVehiculoRepository.save(vehiculo);
+        
+        String[] placas = parcialidadPendientePesaje.get().getLicenciasTransportistas().split(",");
+        List<AgrTransportistas> transportistas = agrTransportistaRepository.findAllById(Arrays.asList(placas));
+        transportistas.stream().forEach(t -> t.setEstadoTransportista(Estados.TRANSPORTISTA_ASIGNADO_DISPONIBLE));
+        agrTransportistaRepository.saveAll(transportistas);
         
         return parcialidadPendientePesaje.isPresent() ? bcMensajesService.postMensaje(BcMensajes.builder()
                         .mensaje("Parcionalidad No. "+String.valueOf(idParcialidad)+" recibida,"
@@ -341,7 +358,7 @@ public class BcCuentaCorrienteService {
                         .totalPesaje(totalPesoBoletaParcialidades)
                         .fechaCreacion(new Date())
                         .parcialidades(0)
-                        .aprobado(0)
+                        .aprobado(51)
                         .correccion(0)
                             .idParcialidad(0)
                         .build());
@@ -358,7 +375,7 @@ public class BcCuentaCorrienteService {
                         .totalPesaje(totalPesoBoletaParcialidades)
                          .fechaCreacion(new Date())
                             .parcialidades(0)
-                        .aprobado(0)
+                        .aprobado(51)
                         .correccion(0)
                             .idParcialidad(0)
                         .build());
@@ -376,7 +393,7 @@ public class BcCuentaCorrienteService {
                         .totalPesaje(totalPesoBoletaParcialidades)
                         .fechaCreacion(new Date())
                         .parcialidades(0)
-                        .aprobado(0)
+                        .aprobado(51)
                         .correccion(0)
                         .idParcialidad(0)
                         .build());
@@ -386,15 +403,19 @@ public class BcCuentaCorrienteService {
         return mensaje;
     }
     
-    public void actualizarEstadoCuenta(String numeroCuenta, int idEstado){
+    public RespuestaDto actualizarEstadoCuenta(String numeroCuenta, int idEstado){
         BcCuentaCorriente cuenta = bccRepository.findByNumeroCuenta(numeroCuenta);
         cuenta.setEstadoCuenta(idEstado);
         bccRepository.save(cuenta);
+        
+        RespuestaDto res = new RespuestaDto();
+        res.setTitulo("Cuenta Actualizada");
+        res.setContenido("Se cambió el estado de la cuenta correctamente");
+        return res;
     } 
     
-    /*public List<CuentaCreadaProjection> getCuentasBandejas(){
-        List<Integer> estado = new ArrayList();
-        estado.add(2);
+    public List<CuentaProjection> getCuentasBandejas(){       
         
-    }*/
+        return bccRepository.findDataCuentaGestionar();
+    }
 }

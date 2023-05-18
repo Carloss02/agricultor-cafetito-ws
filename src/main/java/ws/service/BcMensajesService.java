@@ -70,4 +70,8 @@ public class BcMensajesService {
         
         mensajesRepository.save(mensaje);
     }
+    
+    public BcMensajes getMensajesByCuentaTolerancia(String numCuenta){
+        return mensajesRepository.findByNumeroCuentaAndAprobado(numCuenta, 51);
+    }
 }

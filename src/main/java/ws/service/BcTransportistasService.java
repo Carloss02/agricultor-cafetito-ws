@@ -7,14 +7,19 @@ package ws.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrTransportistas;
 import ws.agricultor.repository.AgrTransportistasRepository;
+import ws.cafetito.model.BcParcialidades;
 import ws.cafetito.model.BcTransportistas;
 import ws.cafetito.repository.BcEstadosRepository;
+import ws.cafetito.repository.BcParcialidadesRepository;
 import ws.cafetito.repository.BcTransportistasRepository;
 import ws.dto.RegistrarTransportistaDto;
+import ws.dto.RespuestaDto;
 import ws.dto.TransportistasAutorizadosDto;
 import ws.util.Estados;
 
@@ -28,6 +33,9 @@ public class BcTransportistasService {
     
     @Autowired
     private AgrTransportistasRepository atRepository;
+    
+    @Autowired
+    private BcParcialidadesRepository bpRepository;
     
     //agregar servicios 
     
@@ -67,21 +75,55 @@ public class BcTransportistasService {
         
     }
     
-    public String autorizarTrasportista(String licencia){
+    public RespuestaDto autorizarTrasportista(String licencia){
         BcTransportistas transportista = btRepository.findByIdLicencia(licencia);
         transportista.setEstadoTransportista(Estados.TRANSPORTISTA_AUTORIZADO);
         btRepository.save(transportista);
-        return "Vehículo Autorizado";
+        RespuestaDto res = new RespuestaDto();
+        res.setTitulo("Vehículo Autorizado");
+        res.setContenido("Se ha rechazado el vehículo correctamente ");
+        return res;
     }
     
-    public String rechazarTransportista(String licencia){
+    public RespuestaDto rechazarTransportista(String licencia){
         BcTransportistas transportista = btRepository.findByIdLicencia(licencia);
         transportista.setEstadoTransportista(Estados.TRANSPORTISTA_RECHAZADO);
         btRepository.save(transportista);
-        return "Vehículo Rechazado";
+        RespuestaDto res = new RespuestaDto();
+        res.setTitulo("Vehículo Rechazado");
+        res.setContenido("Se ha rechazado el vehículo correctamente ");
+        return res;
     }
     
     public List<AgrTransportistas> getTrasportistasCreados(){
-        return atRepository.findByEstadoTransportista(20);
+        List<AgrTransportistas> todos = atRepository.findAll();
+        List<BcTransportistas> agregados = btRepository.findAll();
+        
+        List<AgrTransportistas> sinAgregar = todos.stream()
+                .filter(t -> agregados.stream().noneMatch(a -> a.getIdLicencia().equals(t.getIdLicencia())))
+                .collect(Collectors.toList());
+        return sinAgregar;
+    }
+    
+    public TransportistasAutorizadosDto validarPermisoTransportista(String licencia, Integer parcialidad){
+        BcTransportistas transportista = btRepository.findByIdLicencia(licencia);
+        Optional<BcParcialidades> bcParcialidad = bpRepository.findById(parcialidad);
+        TransportistasAutorizadosDto dto = new TransportistasAutorizadosDto();
+        System.out.println("PARCIALIDAD" + bcParcialidad.get().getIdParcialidad());
+        System.out.println("ESTADO TRANSPORTISTA" + transportista.getEstadoTransportista());
+        if(bcParcialidad.isPresent()){
+            
+            if(bcParcialidad.get().getLicenciasTransportistas().contains(licencia) && transportista.getEstadoTransportista().equals(Estados.TRANSPORTISTA_AUTORIZADO)){
+                dto.setEmail(transportista.getEmailTransportista());
+                dto.setLicencia(transportista.getIdLicencia());
+                dto.setNombre(transportista.getNombreTransportista());
+                dto.setTelefono(transportista.getTelefonoTransportista());
+                dto.setTipoLicencia(transportista.getTipoLicencia());
+                return dto;
+            }
+        }else{
+            return null;
+        }
+        return null;
     }
 }

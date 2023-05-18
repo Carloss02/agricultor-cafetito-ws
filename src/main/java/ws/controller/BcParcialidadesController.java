@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ws.cafetito.model.BcParcialidades;
 import ws.dto.ParcialidadEnviadaDto;
+import ws.dto.RespuestaDto;
 import ws.projection.ParcialidadProjection;
 import ws.service.BcParcialidadesService;
 import ws.service.BcUsuariosService;
@@ -33,7 +35,7 @@ public class BcParcialidadesController {
     
     @Operation(summary = "Autorizar Ingreso Vehículo y transportista al Beneficio de Café")
     @PostMapping("/autorizarIngreso/{idParcialidad}")
-    public String autorizarIngreso(
+    public RespuestaDto autorizarIngreso(
             @PathVariable int idParcialidad, 
             Authentication authentication
     )
@@ -75,6 +77,20 @@ public class BcParcialidadesController {
         
         if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_AUTORIZAR_INGRESO)){
             return bpService.getParcialidadesEnRuta();
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        }  
+    }
+    
+    @GetMapping("/gestionar/{noCuenta}")
+    public List<ParcialidadProjection> parcialidadEnRuta( 
+            Authentication authentication,
+            @PathVariable String noCuenta){
+        String username = authentication.getName(); 
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
+            return bpService.getParcialidadesCuenta(noCuenta);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
         }  

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,8 @@ import ws.dto.CreacionCuentaDto;
 import ws.dto.CuentaCreadaDto;
 import ws.dto.MensajeDto;
 import ws.dto.ParamCuentaDto;
+import ws.dto.RespuestaDto;
+import ws.projection.CuentaProjection;
 import ws.service.BcCuentaCorrienteService;
 import ws.service.BcUsuariosService;
 import ws.util.Roles;
@@ -123,13 +126,50 @@ public class BcCuentaCorrienteController {
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
-        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_PESO_CABAL)){
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
             
             return bccService.calculoTolerancia(noCuenta, username);
         }else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
         }
+    }
+    
+    @PutMapping("/actualizar/{cuenta}/{idEstado}")
+    public RespuestaDto actualizarEstadoCuenta(
+            Authentication authentication,
+            @PathVariable String cuenta,
+            @PathVariable Integer idEstado){
+        
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
+            
+            return bccService.actualizarEstadoCuenta(cuenta, idEstado);
+            
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+        
+    }
+    
+    @GetMapping("/gestionar")
+    public List<CuentaProjection> cuentaGestionar(
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
+            
+            return bccService.getCuentasBandejas();
+            
+        }else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
+        
     }
     
 }

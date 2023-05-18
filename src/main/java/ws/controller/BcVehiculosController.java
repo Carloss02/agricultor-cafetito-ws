@@ -5,6 +5,7 @@
 package ws.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ws.agricultor.model.AgrVehiculos;
+import ws.dto.RespuestaDto;
 import ws.dto.VehiculosAutorizadosDto;
 import ws.service.AgrUsuariosService;
 import ws.service.AgrVehiculosService;
@@ -63,12 +65,12 @@ public class BcVehiculosController {
     
     
     @PostMapping("/autorizar/{placa}")
-    public String autorizarVehiculo(@PathVariable String placa, Authentication authentication){
+    public RespuestaDto autorizarVehiculo(@PathVariable String placa, Authentication authentication){
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
-            return bvService.autorizarVehiculo(placa);
+            return bvService.autorizarVehiculo(placa, username);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
@@ -76,12 +78,12 @@ public class BcVehiculosController {
     }
     
     @PostMapping("/rechazar/{placa}")
-    public String rechazarVehiculo(@PathVariable String placa, Authentication authentication){
+    public RespuestaDto rechazarVehiculo(@PathVariable String placa, Authentication authentication){
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
-            return bvService.rechazarVehículo(placa);
+            return bvService.rechazarVehículo(placa, username);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
@@ -115,6 +117,22 @@ public class BcVehiculosController {
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
         } 
+    }
+    
+    @PostMapping("/pesaje/{placa}/{peso}")
+    public RespuestaDto pesajeVehiculo(
+            @PathVariable String placa,
+            @PathVariable BigDecimal peso,
+            Authentication authentication){
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_PESO_CABAL)) {  
+            return bvService.pesajeVehiculo(placa, peso,username);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
     }
     
 }
