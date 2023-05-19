@@ -109,7 +109,7 @@ public class AgrCuentaCorrienteController {
         String username = authentication.getName();
         String rolesUsuario = agrUsuariosService.getRolesByUser(username);
         
-        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_AGRICULTOR_ADMIN)){
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_VENTAS)){
             
             return accService.getCuentasByEstado();
             
