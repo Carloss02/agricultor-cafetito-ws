@@ -66,7 +66,7 @@ public class BcTransportistasController {
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
-            return btService.autorizarTrasportista(licencia);
+            return btService.autorizarTrasportista(licencia, username);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
@@ -81,7 +81,7 @@ public class BcTransportistasController {
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {  
-            return btService.rechazarTransportista(licencia);
+            return btService.rechazarTransportista(licencia, username);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
@@ -102,16 +102,15 @@ public class BcTransportistasController {
         }
     }
     
-    @GetMapping("/validar/permiso/{licencia}/{idParcialidad}")
+    @GetMapping("/validar/permiso/{licencia}")
     public TransportistasAutorizadosDto validarPermisoTransportista(
             Authentication authentication,
-            @PathVariable String licencia,
-            @PathVariable Integer idParcialidad){
+            @PathVariable String licencia){
         String username = authentication.getName();
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
         if (RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_AUTORIZAR_INGRESO)) {  
-            return btService.validarPermisoTransportista(licencia, idParcialidad);
+            return btService.validarPermisoTransportista(licencia);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");

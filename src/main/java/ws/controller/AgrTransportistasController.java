@@ -70,7 +70,7 @@ public class AgrTransportistasController {
     }
     
     @PutMapping("/editar")
-    public AgrTransportistas registrarVehiculo(@RequestBody AgrTransportistas transportista, Authentication authentication){
+    public AgrTransportistas editarTransportista(@RequestBody AgrTransportistas transportista, Authentication authentication){
         String username = authentication.getName();   
         String rolesUsuario = agrUsuariosService.getRolesByUser(username);
         

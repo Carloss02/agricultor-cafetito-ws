@@ -189,7 +189,37 @@ public class BcCuentaCorrienteService {
                     res.setMensaje("Cuenta creada, por favor enviar la primera parcialidad.");
                     res.setRechazado(0);
                     res.setNumeroCuenta(creadaC.getNumeroCuenta());
-
+                    
+                    //Cambio de estado de los vehiculos
+                    Type tipoListaVehiculos = new TypeToken<List<VehiculosAsigDto>>() {}.getType();
+                    List<VehiculosAsigDto> autorizados = new Gson().fromJson(cuenta.getVehiculosTransportistasAsignados(), tipoListaVehiculos);
+                    List<String> placas = autorizados.stream().map(p -> p.getPlaca()).collect(Collectors.toList());
+                    List<AgrVehiculos> vehiculos = agrVehiculoRepository.findAllById(placas);
+                    
+                    vehiculos.forEach(v -> {
+                        if(!v.getEstadoVehiculo().equals(Estados.VEHICULO_ASIGNADO_EN_RUTA)){
+                            v.setEstadoVehiculo(Estados.VEHICULO_ASIGNADO_DISPONIBLE);
+                        }else{
+                            v.setEstadoVehiculo(Estados.VEHICULO_ASIGNADO_EN_RUTA);
+                        }
+                    });                    
+                    agrVehiculoRepository.saveAll(vehiculos);
+                    
+                    
+                    //cambio de estado a los transportistas
+                    List<String> allLicencias = autorizados.stream()
+                            .flatMap(v -> v.getLicencias().stream())
+                            .collect(Collectors.toList());
+                    List<AgrTransportistas> transportistas = agrTransportistaRepository.findAllById(allLicencias);
+                    
+                    transportistas.forEach(t ->{
+                        if(!t.getEstadoTransportista().equals(Estados.TRANSPORTISTA_ASIGNADO_EN_RUTA)){
+                            t.setEstadoTransportista(Estados.TRANSPORTISTA_ASIGNADO_DISPONIBLE);
+                        }else{
+                            t.setEstadoTransportista(Estados.TRANSPORTISTA_ASIGNADO_EN_RUTA);
+                        }
+                    });
+                    agrTransportistaRepository.saveAll(transportistas);
                     break;
                 case 2:
 
@@ -252,10 +282,30 @@ public class BcCuentaCorrienteService {
         Optional<BcParcialidades> parcialidadPendientePesaje = parcialidadesBeneficio.stream()
                 .filter(parcialidad -> parcialidad.getEstadoParcialidad()
                         .equals(Estados.PAR_PENDIENTE_PESAR) && parcialidad.getIdParcialidad().equals(parcialidadBeneficio.getIdParcialidad())).findAny();
-        System.out.println("ENTRA A LAS VALIDACIONES");   
+        System.out.println("ENTRA A LAS VALIDACIONES"); 
         
-        
-        //Condicion cuando es el ultimo pesaje
+        //validación si la cuenta solo tiene una parcialidad
+        if(parcialidadesBeneficio.size() == 1){
+            cuentaBeneficio.setEstadoCuenta(Estados.PESAJE_FINALIZADO);
+            bccRepository.save(cuentaBeneficio);
+            accsService.actualizarEstadoCuenta(cuentaBeneficio.getNumeroCuenta(), Estados.PESAJE_FINALIZADO);
+            boleta = (BcBoletaPesaje) bcBoletaPesajeService.crearBoleta(parcialidadPendientePesaje.get(), pesaje, userName).get("boletaBeneficio");
+            
+           return bcMensajesService.postMensaje(BcMensajes.builder()
+                    .mensaje("Parcionalidad No. " + String.valueOf(idParcialidad) + " recibida,"
+                            + " se ha finalizado el pesaje de la cuenta.")
+                    .numeroCuenta(cuentaBeneficio.getNumeroCuenta())
+                    .idParcialidad(idParcialidad)
+                    .fechaCreacion(new Date())
+                    .parcialidades(0)
+                    .aprobado(0)
+                    .correccion(0)
+                    .totalPesaje(boleta.getResultadoPesaje())
+                    .build());
+            
+            
+        }else{
+            //Condicion cuando es el ultimo pesaje
         if(parcialidadPendientePesaje.isPresent()
                 && cuentaBeneficio.getEstadoCuenta().equals(Estados.PESAJE_INICIADO)
                 && parcialidadesBeneficio.stream()
@@ -314,7 +364,9 @@ public class BcCuentaCorrienteService {
                 .totalPesaje(boleta.getResultadoPesaje())
                         .build())
                 : null;
-        
+            
+        }
+            
         
     }
     
@@ -331,7 +383,7 @@ public class BcCuentaCorrienteService {
         BcCuentaCorriente cuentaCorriente = bccRepository.findByNumeroCuenta(numeroCuenta);
         
         if(cuentaCorriente == null){
-            System.out.println("Truena");
+            System.out.println("No existe la cuenta");
         }
         
         BigDecimal porcentajePesoCuentaCorriente = cuentaCorriente.getPesoTotal().multiply(new BigDecimal(0.05));
@@ -353,7 +405,7 @@ public class BcCuentaCorrienteService {
                     System.out.println("PASA POR EL CASO 1");
                     mensaje = bcMensajesService.postMensaje(BcMensajes.builder()
                         .mensaje("El pesaje total de granos de cafe tiene una tolerancia mayor al 5%,"
-                                + " cuenta confirmada")
+                                + " cuenta cerrada.")
                         .numeroCuenta(numeroCuenta)
                         .totalPesaje(totalPesoBoletaParcialidades)
                         .fechaCreacion(new Date())
@@ -370,7 +422,7 @@ public class BcCuentaCorrienteService {
                     System.out.println("PASA POR EL -1");
                     mensaje = bcMensajesService.postMensaje(BcMensajes.builder()
                         .mensaje("El pesaje total de granos de cafe coincide con lo acordado,"
-                                + " cuenta confirmada")
+                                + " cuenta cerrada.")
                         .numeroCuenta(numeroCuenta)
                         .totalPesaje(totalPesoBoletaParcialidades)
                          .fechaCreacion(new Date())
@@ -388,7 +440,7 @@ public class BcCuentaCorrienteService {
             System.out.println("PASA POR SEGUNDO IF");
             mensaje = bcMensajesService.postMensaje(BcMensajes.builder()
                         .mensaje("El pesaje total de granos de cafe recibido, tiene una tolerancia menor al 5%,"
-                                + " cuenta confirmada")
+                                + " cuenta cerrada.")
                         .numeroCuenta(numeroCuenta)
                         .totalPesaje(totalPesoBoletaParcialidades)
                         .fechaCreacion(new Date())
@@ -408,6 +460,7 @@ public class BcCuentaCorrienteService {
         cuenta.setEstadoCuenta(idEstado);
         bccRepository.save(cuenta);
         
+        accsService.actualizarEstadoCuenta(numeroCuenta, idEstado);
         RespuestaDto res = new RespuestaDto();
         res.setTitulo("Cuenta Actualizada");
         res.setContenido("Se cambió el estado de la cuenta correctamente");

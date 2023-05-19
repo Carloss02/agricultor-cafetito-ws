@@ -76,7 +76,7 @@ public class AgrTransportistasService {
         AgrTransportistas t = atRepository.save(transportista);
         bitacoraService.addRecordAgr("agr_trasnportistas", t.getIdLicencia(), 'I', t, username);
         //agregar logica para registrar al transportista en el sistema del beneficio de café
-        bcTransportistasService.registrarTransportista(tDto, username);
+       // bcTransportistasService.registrarTransportista(tDto, username);
         
         return tDto;
         }else{
@@ -129,8 +129,8 @@ public class AgrTransportistasService {
         Type tipoListaVehiculos = new TypeToken<List<VehiculosAsigDto>>() {}.getType();
         List<VehiculosAsigDto> autorizados = new Gson().fromJson(cuenta.getVehiculosTransportistasAsignados(), tipoListaVehiculos);
         List<String> allLicenciasAutorizadas = autorizados.stream()
-        .flatMap(v -> v.getLicencias().stream())
-        .collect(Collectors.toList());
+                .flatMap(v -> v.getLicencias().stream())
+                .collect(Collectors.toList());
         
         List<AgrTransportistas> disponibles = atRepository.findByEstadoTransportista(24);
         

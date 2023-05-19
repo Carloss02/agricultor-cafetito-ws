@@ -143,7 +143,8 @@ public class BcVehiculosService {
     public RespuestaDto pesajeVehiculo(String placa, BigDecimal peso, String username){
         BcVehiculos vehiculo = bvRepository.findByPlacaVehiculo(placa);
         AgrVehiculos esvehiculoAutorizado = avRepository.findByPlacaVehiculo(placa);
-        if(!esvehiculoAutorizado.getPesoVehiculo().equals(peso)){
+        System.out.println("QUE TRAE LA VALIDACION" + !(esvehiculoAutorizado.getPesoVehiculo().compareTo(peso) == 0) + " VALORES agricultor" + esvehiculoAutorizado.getPesoVehiculo() + " PESAJE" + peso);
+        if(!(esvehiculoAutorizado.getPesoVehiculo().compareTo(peso) == 0)){
             BcVehiculos v = bvRepository.save(
                     BcVehiculos.builder()
                             .placaVehiculo(esvehiculoAutorizado.getPlacaVehiculo())

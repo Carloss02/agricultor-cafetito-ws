@@ -98,7 +98,7 @@ public class BcVehiculosController {
         String username = authentication.getName();   
         String rolesUsuario = bcUsuariosService.getRolesByUser(username);
         
-        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROL_ENVIOS)){
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_PESO_CABAL)){
             return agrVehiculoService.getVehiculoByPlaca(placa);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
