@@ -83,7 +83,7 @@ public class BcParcialidadesService {
         bcParcialidad.setPlacaVehiculo(dto.getPlacaVehiculo());
         bcParcialidad.setLicenciasTransportistas(dto.getLicenciasTransportistas());
         bcParcialidad.setUsuarioCreacion(username);
-
+        bcParcialidad.setFechaParcialidadEnviada(new Date());
         return bpRepository.save(bcParcialidad);
     }
     

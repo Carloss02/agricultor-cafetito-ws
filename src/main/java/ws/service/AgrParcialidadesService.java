@@ -4,6 +4,7 @@
  */
 package ws.service;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,7 @@ public class AgrParcialidadesService {
         agrParcialidad.setPlacaVehiculo(dto.getPlacaVehiculo());
         agrParcialidad.setLicenciasTransportistas(dto.getLicenciasTransportistas());
         agrParcialidad.setUsuarioCreacion(username);
+        agrParcialidad.setFechaParcialidadEnviada(new Date());
         
         apRepository.saveAndFlush(agrParcialidad);
         
