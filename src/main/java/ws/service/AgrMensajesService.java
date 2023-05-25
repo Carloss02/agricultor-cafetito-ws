@@ -12,6 +12,7 @@ import ws.agricultor.repository.AgrMensajesRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.agricultor.repository.AgrEstadosRepository;
 import ws.dto.ConfirmarCuentaDto;
 import ws.dto.CuentaCreadaDto;
@@ -42,10 +43,12 @@ public class AgrMensajesService {
         return mensajesDto;
     }
     
+    @Transactional(value = "mysqlTransactionManager")
     public AgrMensajes putMensaje(AgrMensajes mensaje){
         return mensajesRepository.save(mensaje);
     }
     
+    @Transactional(value = "msyqlTransactionManager")
     public MensajeDto postMensaje(AgrMensajes mensaje){
 
         mensaje.setEstadoMensaje(Estados.MENSAJE_PENDIENTE); // Mensaje Pendiente

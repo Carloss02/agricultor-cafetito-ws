@@ -15,4 +15,5 @@ public interface CuentaProjection {
     String getAgricultor();
     String getEstadoNombre();
     Integer getEstado();
+    String getTipoMedida();
 }

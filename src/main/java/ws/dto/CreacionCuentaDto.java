@@ -23,6 +23,7 @@ public class CreacionCuentaDto {
     private Integer estado;
     private Integer idCuentaCorriente;
     private List<VehiculosAsigDto> vehiculos;
+    private String tipoMedida;
    
     
 }

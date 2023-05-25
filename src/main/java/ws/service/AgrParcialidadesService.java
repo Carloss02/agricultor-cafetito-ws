@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.agricultor.model.AgrParcialidades;
 import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
@@ -90,12 +91,14 @@ public class AgrParcialidadesService {
         return dto;
     }
     
+    @Transactional(value = "mysqlTransactionManager")
     public void actualizarEstadoParcialidad(int idParcialida, int idEstado){
         AgrParcialidades parcialidad = apRepository.findByIdParcialidad(idParcialida);
         parcialidad.setEstadoParcialidad(idEstado);
         apRepository.save(parcialidad);
     }
     
+    @Transactional(value = "mysqlTransactionManager")
     public Boolean agregarParcialidad(AgrParcialidades p){
         apRepository.save(p);
         agrBitacoraService.addRecordAgr("agr_parcialidades", p.getIdParcialidad().toString(), 'I', p, p.getUsuarioCreacion());

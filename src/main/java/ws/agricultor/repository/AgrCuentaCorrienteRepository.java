@@ -25,6 +25,7 @@ public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCor
     
     @Query(value = "SELECT \n"
             + "	acc.PESO_TOTAL as \"peso\",\n"
+            + "	acc.TIPO_MEDIDA as \"tipoMedida\",\n"
             + "	acc.NUMERO_CUENTA as \"numeroCuenta\",\n"
             + "	acc.CANTIDAD_PARCIALIDADES as \"cantidad\",\n"
             + "	acc.ID_CUENTA_CORRIENTE as \"idCuentaCorriente\",\n"
@@ -46,7 +47,8 @@ public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCor
             + "	acc.ID_CUENTA_CORRIENTE as \"idCuentaCorriente\",\n"
             + "	acc.ESTADO_CUENTA as \"estado\",\n"
             + "	au.NOMBRE_USUARIO as \"agricultor\",\n"
-            + "	ae.NOMBRE_ESTADO as \"estadoNombre\"\n"
+            + "	ae.NOMBRE_ESTADO as \"estadoNombre\",\n"
+            + "	acc.TIPO_MEDIDA as \"tipoMedida\"\n"
             + "FROM agr_cuenta_corriente acc \n"
             + "INNER JOIN agr_estados ae \n"
             + "ON ae.ID_ESTADO = acc.ESTADO_CUENTA \n"

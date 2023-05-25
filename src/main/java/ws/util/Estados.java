@@ -32,5 +32,6 @@ public class Estados {
     public static final int TRANSPORTISTA_ASIGNADO_EN_RUTA = 25;
     public static final int MENSAJE_PENDIENTE = 26;
     public static final int MENSAJE_VISTO = 27;
+    public static final int PARCIALIDAD_RECHAZADA = 28;
 
 }

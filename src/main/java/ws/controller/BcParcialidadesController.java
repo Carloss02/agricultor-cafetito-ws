@@ -12,10 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ws.cafetito.model.BcParcialidades;
 import ws.dto.ParcialidadEnviadaDto;
 import ws.dto.RespuestaDto;
 import ws.projection.ParcialidadProjection;
@@ -91,6 +91,20 @@ public class BcParcialidadesController {
         
         if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_CREAR_CUENTA)){
             return bpService.getParcialidadesCuenta(noCuenta);
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+        }  
+    }
+    
+    @PutMapping("/garita/rechazo/{idParcialidad}")
+    public RespuestaDto parcialidadRechazoGarita( 
+            Authentication authentication,
+            @PathVariable Integer idParcialidad){
+        String username = authentication.getName(); 
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+        
+        if(RolesUtil.isRolValido(rolesUsuario, Roles.ROLE_AUTORIZAR_INGRESO)){
+            return bpService.actualizarEstadoRechazoParcialidadGeneral(idParcialidad);
         } else {
             throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
         }  

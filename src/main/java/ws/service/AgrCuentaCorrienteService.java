@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ws.agricultor.model.AgrCuentaCorriente;
@@ -18,6 +19,7 @@ import ws.projection.CuentaProjection;
 import ws.util.Estados;
 
 @Service
+@Slf4j
 public class AgrCuentaCorrienteService {
     @Autowired
     private AgrCuentaCorrienteRepository accRepository;
@@ -26,15 +28,14 @@ public class AgrCuentaCorrienteService {
     private BcCuentaCorrienteService bcCuentaService;
     
     public Boolean agregarCuenta(CreacionCuentaDto dto, String userName){
-        
-        System.out.println("PASA POR AQUÍ");
-        accRepository.save(
+       accRepository.save(
                 AgrCuentaCorriente.builder()
                         .pesoTotal(dto.getPeso())
                         .cantidadParcialidades(dto.getCantidad())
                         .estadoCuenta(Estados.CUENTA_CORRIENTE)
                         .fechaCreacion(new Date())
                         .usuarioCreacion(userName)
+                        .tipoMedida(dto.getTipoMedida())
                         .vehiculosTransportistasAsignados(new Gson().toJson(dto.getVehiculos()))
                 .build()
         );

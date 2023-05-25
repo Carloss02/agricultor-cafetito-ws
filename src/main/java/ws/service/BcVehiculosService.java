@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.agricultor.model.AgrVehiculos;
 import ws.agricultor.repository.AgrVehiculosRepository;
 import ws.cafetito.model.BcCuentaCorriente;
@@ -43,6 +44,7 @@ public class BcVehiculosService {
         return mensajesDto;
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public BcVehiculos registrarVehiculo(RegistrarVehiculoDto vehiculoDto, String username){
         BcVehiculos vehiculo = new BcVehiculos(
                 vehiculoDto.getPlaca(),
@@ -59,6 +61,7 @@ public class BcVehiculosService {
         return bvRepository.save(vehiculo);
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto autorizarVehiculo(String placa, String username){
         AgrVehiculos esvehiculoAutorizado = avRepository.findByPlacaVehiculo(placa);
         RespuestaDto res = new RespuestaDto();
@@ -93,7 +96,7 @@ public class BcVehiculosService {
         }
         
     }
-    
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto rechazarVehículo(String placa, String username){
         AgrVehiculos esvehiculoAutorizado = avRepository.findByPlacaVehiculo(placa);
         RespuestaDto res = new RespuestaDto();
@@ -140,6 +143,7 @@ public class BcVehiculosService {
         return sinAgregar;
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto pesajeVehiculo(String placa, BigDecimal peso, String username){
         BcVehiculos vehiculo = bvRepository.findByPlacaVehiculo(placa);
         AgrVehiculos esvehiculoAutorizado = avRepository.findByPlacaVehiculo(placa);

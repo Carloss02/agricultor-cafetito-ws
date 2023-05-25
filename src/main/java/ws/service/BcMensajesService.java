@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.cafetito.model.BcMensajes;
 import ws.cafetito.repository.BcMensajesRepository;
 import ws.dto.MensajeDto;
@@ -35,6 +36,7 @@ public class BcMensajesService {
         return mensajesRepository.findByNumeroCuenta(numCuenta);
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public MensajeDto postMensaje(BcMensajes mensaje){
         
         //BcEstados estadoMensaje = bcEstadosRepository.findByIdEstado(24);
@@ -44,6 +46,7 @@ public class BcMensajesService {
         return mensaje.toMensajeDto();
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public BcMensajes putMensaje(BcMensajes mensaje){
         return mensajesRepository.save(mensaje);
     }

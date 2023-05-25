@@ -70,6 +70,7 @@ public class BcBoletaPesajeService {
                 .resultadoPesaje(pesajeCafe)
                 .fechaHoraIngreso(new Date())
                 .fechaHoraSalida(new Date())
+                .usuarioCreacion(userName)
                 .build());
         bcBitacoraService.addRecordBc("bc_boleta_pesaje", boletaBeneficio.getIdBoleta().toString(), 'I', boletaBeneficio, userName);
         
@@ -86,6 +87,7 @@ public class BcBoletaPesajeService {
                 .resultadoPesaje(pesajeCafe)
                 .fechaHoraIngreso(new Date())
                 .fechaHoraSalida(new Date())
+                .usuarioCreacion(userName)
                 .build());
         argBitacoraService.addRecordAgr("agr_boleta_pesaje", boletaPesajeAgricultor.getIdBoleta().toString(), 'I', boletaPesajeAgricultor, userName);
         Map<String, Object> boletas = new HashMap();

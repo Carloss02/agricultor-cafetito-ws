@@ -29,6 +29,7 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
      private String usuarioCreacion;
      private Date fechaCreacion;
      private String vehiculosTransportistasAsignados;
+     private String tipoMedida;
 
     public AgrCuentaCorriente() {
     }
@@ -41,8 +42,8 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
         this.estadoCuenta = estadoCuenta;
         this.numeroCuenta = numeroCuenta;
     }
-    
-    public AgrCuentaCorriente(Integer idCuentaCorriente, Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados) {
+
+    public AgrCuentaCorriente(Integer idCuentaCorriente, Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados, String tipoMedida) {
         this.idCuentaCorriente = idCuentaCorriente;
         this.estadoCuenta = estadoCuenta;
         this.numeroCuenta = numeroCuenta;
@@ -51,8 +52,8 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
         this.usuarioCreacion = usuarioCreacion;
         this.fechaCreacion = fechaCreacion;
         this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+        this.tipoMedida = tipoMedida;
     }
-
     
    
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -134,5 +135,14 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
     
     public void setVehiculosTransportistasAsignados(String vehiculosTransportistasAsignados) {
         this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+    }
+    
+    @Column(name="TIPO_MEDIDA", length=2)
+    public String getTipoMedida() {
+        return tipoMedida;
+    }
+
+    public void setTipoMedida(String tipoMedida) {
+        this.tipoMedida = tipoMedida;
     }
 }

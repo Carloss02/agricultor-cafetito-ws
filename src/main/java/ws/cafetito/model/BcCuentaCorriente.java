@@ -23,6 +23,7 @@ public class BcCuentaCorriente  implements java.io.Serializable {
      private String usuarioCreacion;
      private Date fechaCreacion;
      private String vehiculosTransportistasAsignados;
+     private String tipoMedida;
 
     public BcCuentaCorriente() {
     }
@@ -31,15 +32,18 @@ public class BcCuentaCorriente  implements java.io.Serializable {
     public BcCuentaCorriente(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public BcCuentaCorriente(Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados) {
-       this.estadoCuenta = estadoCuenta;
-       this.numeroCuenta = numeroCuenta;
-       this.pesoTotal = pesoTotal;
-       this.cantidadParcialidades = cantidadParcialidades;
-       this.usuarioCreacion = usuarioCreacion;
-       this.fechaCreacion = fechaCreacion;
-       this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+
+    public BcCuentaCorriente(Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados, String tipoMedida) {
+        this.estadoCuenta = estadoCuenta;
+        this.numeroCuenta = numeroCuenta;
+        this.pesoTotal = pesoTotal;
+        this.cantidadParcialidades = cantidadParcialidades;
+        this.usuarioCreacion = usuarioCreacion;
+        this.fechaCreacion = fechaCreacion;
+        this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
+        this.tipoMedida = tipoMedida;
     }
+    
    
     @Column(name="ESTADO_CUENTA")
     public Integer getEstadoCuenta() {
@@ -110,4 +114,14 @@ public class BcCuentaCorriente  implements java.io.Serializable {
         this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
     }
 
+    @Column(name="TIPO_MEDIDA", length=2)
+    public String getTipoMedida() {
+        return tipoMedida;
+    }
+
+    public void setTipoMedida(String tipoMedida) {
+        this.tipoMedida = tipoMedida;
+    }
+
+    
 }

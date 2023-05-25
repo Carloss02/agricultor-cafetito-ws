@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.agricultor.model.AgrTransportistas;
 import ws.agricultor.repository.AgrTransportistasRepository;
 import ws.cafetito.model.BcParcialidades;
@@ -60,6 +61,7 @@ public class BcTransportistasService {
         return transportistasDto; 
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public BcTransportistas registrarTransportista(RegistrarTransportistaDto tDto, String username){
         BcTransportistas transportista = new BcTransportistas(
                 tDto.getLicencia(),
@@ -74,7 +76,7 @@ public class BcTransportistasService {
         return btRepository.save(transportista);
         
     }
-    
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto autorizarTrasportista(String licencia, String username){
         AgrTransportistas trans = atRepository.findById(licencia).get();
         Optional<BcTransportistas> transportista = btRepository.findById(licencia);
@@ -97,10 +99,11 @@ public class BcTransportistasService {
             btRepository.save(transportista.get());
         }
         res.setTitulo("Vehículo Autorizado");
-        res.setContenido("Se ha autorizado el vehículo correctamente ");
+        res.setContenido("Se ha autorizado al transportista correctamente ");
         return res;
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto rechazarTransportista(String licencia, String username){
         AgrTransportistas trans = atRepository.findById(licencia).get();
         Optional<BcTransportistas> transportista = btRepository.findById(licencia);

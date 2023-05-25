@@ -42,6 +42,8 @@ import ws.dto.RespuestaDto;
 import ws.dto.VehiculosAsigDto;
 import ws.projection.CuentaProjection;
 import ws.util.Estados;
+import java.math.RoundingMode;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -116,6 +118,7 @@ public class BcCuentaCorrienteService {
         retorno.setEstadoNombre(cuentaDetalle.getEstadoNombre());
         retorno.setEstado(cuentaDetalle.getEstado());
         retorno.setIdCuentaCorriente(cuentaCorriente.getIdCuentaCorriente());
+        retorno.setTipoMedida(cuentaCorriente.getTipoMedida());
         return retorno;
     }
     
@@ -154,6 +157,7 @@ public class BcCuentaCorrienteService {
                                     .pesoTotal(cuenta.getPesoTotal())
                                     .usuarioCreacion(username)
                                     .vehiculosTransportistasAsignados(cuenta.getVehiculosTransportistasAsignados())
+                                    .tipoMedida(cuenta.getTipoMedida())
                                     .build()
                     );
                     bcBitacoraService.addRecordBc("bc_cuenta_corriente", creadaC.getNumeroCuenta(), 'I', creadaC, username);
@@ -165,14 +169,14 @@ public class BcCuentaCorrienteService {
                         parcialidad.setNumeroCuenta(creadaC.getNumeroCuenta());
                         parcialidad.setEstadoParcialidad(Estados.PAR_PENDIETE_RECOLECTAR);
                         parcialidad.setFechaCreacion(new Date());
-                        parcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades())));
+                        parcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades()),2, RoundingMode.HALF_UP));
                         parcialidad.setUsuarioCreacion(username);
                         bcParcialidadService.agregarParcialidad(parcialidad);
                         
                         agrParcialidad.setIdCuentaCorriente(cuenta.getIdCuentaCorriente());
                         agrParcialidad.setEstadoParcialidad(Estados.PAR_PENDIETE_RECOLECTAR);
                         agrParcialidad.setFechaCreacion(new Date());
-                        agrParcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades())));
+                        agrParcialidad.setPesoParcialidad(creadaC.getPesoTotal().divide(new BigDecimal(creadaC.getCantidadParcialidades()),2, RoundingMode.HALF_UP));
                         agrParcialidad.setUsuarioCreacion(username);                        
                         agrParcialidadService.agregarParcialidad(agrParcialidad);
                         
@@ -370,6 +374,8 @@ public class BcCuentaCorrienteService {
         
     }
     
+    
+    @Transactional(value = "postgresqlTransactionManager")
     public MensajeDto calculoTolerancia(String numeroCuenta, String userName){
         MensajeDto mensaje = new MensajeDto();
         List<BcBoletaPesaje> boletasBeneficio = bcParcialidadesRepository.findByNumeroCuenta(numeroCuenta).stream().map(parcialidad -> {
@@ -455,6 +461,7 @@ public class BcCuentaCorrienteService {
         return mensaje;
     }
     
+    @Transactional(value = "postgresqlTransactionManager")
     public RespuestaDto actualizarEstadoCuenta(String numeroCuenta, int idEstado){
         BcCuentaCorriente cuenta = bccRepository.findByNumeroCuenta(numeroCuenta);
         cuenta.setEstadoCuenta(idEstado);

@@ -28,6 +28,7 @@ public interface BcParcialidadesRepository extends JpaRepository<BcParcialidades
             + "	bp.licencias_transportistas as \"licencias\",\n"
             + "	bp.peso_parcialidad as \"peso\",\n"
             + "	bcc.numero_cuenta  as \"numeroCuenta\",\n"
+            + "	bcc.tipo_medida  as \"tipoMedida\",\n"
             + "	bp.placa_vehiculo as \"placa\",\n"
             + "	be.nombre_estado as \"nombreEstado\",\n"
             + "	bp.fecha_parcialidad_enviada as \"fechaEnvio\"\n"

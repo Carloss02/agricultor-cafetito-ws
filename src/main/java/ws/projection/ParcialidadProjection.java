@@ -20,5 +20,5 @@ public interface ParcialidadProjection {
     String getAutorizo();
     String getPlaca();
     String getLicencias();
-    
+    String getTipoMedida();
 }
