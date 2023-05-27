@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.dto.CreacionCuentaDto;
@@ -20,6 +21,7 @@ import ws.util.Estados;
 
 @Service
 @Slf4j
+@Transactional(value = "mysqlTransactionManager")
 public class AgrCuentaCorrienteService {
     @Autowired
     private AgrCuentaCorrienteRepository accRepository;
@@ -77,5 +79,11 @@ public class AgrCuentaCorrienteService {
         estado.add(6);
         estado.add(7);
         return accRepository.getCuentasEstados(estado);
+    }
+    
+    public void actualizarTolerancia(String noCuenta, Integer tolerancia){
+        AgrCuentaCorriente cuenta = accRepository.findByNumeroCuenta(noCuenta);
+        cuenta.setTolerancia(tolerancia);
+        accRepository.save(cuenta);
     }
 }

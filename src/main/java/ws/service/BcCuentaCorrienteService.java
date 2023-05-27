@@ -388,6 +388,7 @@ public class BcCuentaCorrienteService {
         
         BcCuentaCorriente cuentaCorriente = bccRepository.findByNumeroCuenta(numeroCuenta);
         
+        
         if(cuentaCorriente == null){
             System.out.println("No existe la cuenta");
         }
@@ -420,6 +421,9 @@ public class BcCuentaCorrienteService {
                         .correccion(0)
                             .idParcialidad(0)
                         .build());
+                    
+                    accsService.actualizarTolerancia(numeroCuenta, 3);
+                    
                     break;
                 
                 //Oseigase la tolerancia coincide con lo que se acordo
@@ -437,6 +441,8 @@ public class BcCuentaCorrienteService {
                         .correccion(0)
                             .idParcialidad(0)
                         .build());
+                    
+                    accsService.actualizarTolerancia(numeroCuenta, 2);
                     break;    
             }    
         }
@@ -455,10 +461,13 @@ public class BcCuentaCorrienteService {
                         .correccion(0)
                         .idParcialidad(0)
                         .build());
+            
+            accsService.actualizarTolerancia(numeroCuenta, 1);
         }
         
         
         return mensaje;
+        
     }
     
     @Transactional(value = "postgresqlTransactionManager")

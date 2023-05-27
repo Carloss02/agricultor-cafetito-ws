@@ -30,6 +30,7 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
      private Date fechaCreacion;
      private String vehiculosTransportistasAsignados;
      private String tipoMedida;
+     private Integer tolerancia;
 
     public AgrCuentaCorriente() {
     }
@@ -43,7 +44,7 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
         this.numeroCuenta = numeroCuenta;
     }
 
-    public AgrCuentaCorriente(Integer idCuentaCorriente, Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados, String tipoMedida) {
+    public AgrCuentaCorriente(Integer idCuentaCorriente, Integer estadoCuenta, String numeroCuenta, BigDecimal pesoTotal, Integer cantidadParcialidades, String usuarioCreacion, Date fechaCreacion, String vehiculosTransportistasAsignados, String tipoMedida, Integer tolerancia) {
         this.idCuentaCorriente = idCuentaCorriente;
         this.estadoCuenta = estadoCuenta;
         this.numeroCuenta = numeroCuenta;
@@ -53,7 +54,9 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
         this.fechaCreacion = fechaCreacion;
         this.vehiculosTransportistasAsignados = vehiculosTransportistasAsignados;
         this.tipoMedida = tipoMedida;
+        this.tolerancia = tolerancia;
     }
+    
     
    
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -145,4 +148,15 @@ public class AgrCuentaCorriente  implements java.io.Serializable {
     public void setTipoMedida(String tipoMedida) {
         this.tipoMedida = tipoMedida;
     }
+
+    @Column(name="TOLERANCIA")
+    public Integer getTolerancia() {
+        return tolerancia;
+    }
+
+    public void setTolerancia(Integer tolerancia) {
+        this.tolerancia = tolerancia;
+    }
+    
+    
 }
