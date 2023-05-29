@@ -5,6 +5,7 @@
 package ws.service;
 
 import com.google.gson.Gson;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import ws.agricultor.model.AgrCuentaCorriente;
 import ws.agricultor.repository.AgrCuentaCorrienteRepository;
 import ws.dto.CreacionCuentaDto;
 import ws.projection.CuentaProjection;
+import ws.projection.ReporteProjection;
 import ws.util.Estados;
 
 @Service
@@ -85,5 +87,17 @@ public class AgrCuentaCorrienteService {
         AgrCuentaCorriente cuenta = accRepository.findByNumeroCuenta(noCuenta);
         cuenta.setTolerancia(tolerancia);
         accRepository.save(cuenta);
+    }
+    
+    public List<ReporteProjection> getReporteAgricultores(Date fecha1, Date fecha2){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaInicio = dateFormat.format(fecha1);
+        String fechaFin = dateFormat.format(fecha2);
+        
+        System.out.println("Fecha inicio " + fechaInicio);
+        System.out.println("Fecha Fin " + fechaFin);
+        
+        return accRepository.getReporteAgricultores(fechaInicio, fechaFin);
     }
 }

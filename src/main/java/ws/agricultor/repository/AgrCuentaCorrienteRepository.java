@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.projection.CuentaProjection;
+import ws.projection.ReporteProjection;
 
 /**
  *
@@ -57,4 +58,25 @@ public interface AgrCuentaCorrienteRepository extends JpaRepository<AgrCuentaCor
             + "WHERE acc.ID_CUENTA_CORRIENTE = :id", nativeQuery = true)
     CuentaProjection getCuentaById(@Param("id") Integer idCuenta);
     
+    @Query(value = "SELECT \n"
+            + "    u.ID_USUARIO as \"usuarioAgricultor\",\n"
+            + "    u.NOMBRE_USUARIO as \"nombreAgricultor\",\n"
+            + "    u.TELEFONO_USUARIO as \"telefonoAgricultor\",\n"
+            + "    u.EMAIL_USUARIO as \"emailAgricultor\",\n"
+            + "    COUNT(c.ID_CUENTA_CORRIENTE) as \"cantidadCuentas\",\n"
+            + "    SUM(c.PESO_TOTAL) as \"pesoTotal\",\n"
+            + "    SUM(CASE WHEN c.TOLERANCIA = 1 THEN 1 ELSE 0 END) AS \"toleranciaMenor\",\n"
+            + "    SUM(CASE WHEN c.TOLERANCIA = 2 THEN 1 ELSE 0 END) AS \"toleranciaCoincide\",\n"
+            + "    SUM(CASE WHEN c.TOLERANCIA = 3 THEN 1 ELSE 0 END) AS \"toleranciaMayor\" \n"
+            + "FROM \n"
+            + "    agr_cuenta_corriente c\n"
+            + "    INNER JOIN agr_usuarios u ON c.USUARIO_CREACION = u.ID_USUARIO\n"
+            + "WHERE \n"
+            + "    c.ESTADO_CUENTA = 7\n"
+            + "    AND c.FECHA_CREACION BETWEEN :fechaInicio AND :fechaFin\n"
+            + "    \n"
+            + "GROUP BY \n"
+            + "    u.ID_USUARIO ORDER BY pesoTotal desc", nativeQuery = true)
+    List<ReporteProjection> getReporteAgricultores(@Param("fechaInicio") String fechaInicio, @Param("fechaFin") String fechaFin);
+
 }

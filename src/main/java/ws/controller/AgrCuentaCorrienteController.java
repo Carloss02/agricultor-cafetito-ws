@@ -7,8 +7,10 @@ package ws.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ws.agricultor.model.AgrCuentaCorriente;
 import ws.dto.CreacionCuentaDto;
@@ -23,8 +26,10 @@ import ws.dto.CuentaDto;
 import ws.dto.TransportistasDto;
 import ws.dto.VehiculosAsignadosDto;
 import ws.projection.CuentaProjection;
+import ws.projection.ReporteProjection;
 import ws.service.AgrCuentaCorrienteService;
 import ws.service.AgrUsuariosService;
+import ws.service.BcUsuariosService;
 import ws.util.Roles;
 import ws.util.RolesUtil;
 
@@ -37,6 +42,9 @@ public class AgrCuentaCorrienteController {
     
     @Autowired 
     private AgrUsuariosService agrUsuariosService;
+    
+    @Autowired 
+    private BcUsuariosService bcUsuariosService;
     
     @Operation(summary = "Simulando datos de una cuenta usando dtos")
     @GetMapping()
@@ -153,5 +161,23 @@ public class AgrCuentaCorrienteController {
             //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
         }
         
+    }
+    
+    @GetMapping("/reportes/agricultores")
+    public List<ReporteProjection> reportesAgricultores(
+            @RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+            @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin,
+            Authentication authentication) {
+        String username = authentication.getName();
+        String rolesUsuario = bcUsuariosService.getRolesByUser(username);
+
+        if (RolesUtil.isRolValido(rolesUsuario, Roles.ROL_CAFETITO_ADMIN)) {
+
+            return accService.getReporteAgricultores(fechaInicio, fechaFin);
+
+        } else {
+            throw new AccessDeniedException("403 Forbidden. Access Denied. No Roles.");
+            //throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado.");
+        }
     }
 }
